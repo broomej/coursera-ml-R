@@ -1,7 +1,7 @@
 require(R.matlab)
 ex4data1 <- readMat("ex4data1.mat")
 ex4data1$X <- cbind(1, ex4data1$X)
-
+# Sigmoid function
 sig <- function(x){
   1 / (1 + exp(-x))
 }
@@ -18,7 +18,7 @@ ex4weights <- readMat("ex4weights.mat")
 
 input_layer_size <- 400
 hidden_layer_size <- 25
-output_layer_size <- 10 
+output_layer_size <- 10
 n_training_samples <- 5000
 
 # unlist() does what flattenParams does in kaleko's python script
@@ -29,13 +29,13 @@ reshapeParams <- function(flattened_array){
                    nrow = hidden_layer_size,
                    ncol = input_layer_size + 1,
                    byrow = FALSE)
-  
+
   theta2 <- matrix(flattened_array[((input_layer_size+1)*hidden_layer_size + 1):
                                      length(flattened_array)],
                    nrow = output_layer_size,
                    ncol = hidden_layer_size + 1,
                    byrow = FALSE)
-  
+
   return(list(theta1 = theta1, theta2 = theta2))
 }
 
@@ -49,35 +49,35 @@ reshapeX <- function(flattenedX){
 }
 
 # sum(ex4data1$X!=xReshaped)
-# 
+#
 # mythetas_flattened <- unlist(ex4weights)
 # myX_flattened <- unlist(ex4data1$X)
 # myy <- newy
 # mylambda = 0
 computeCost <- function(mythetas_flattened, myX_flattened, myy, mylambda = 0){
   # Modified to take (m X k) dimensional y matrix
-  
+
   # First unroll the parameters
   mythetas <- reshapeParams(mythetas_flattened)
-  
+
   # Now unroll X
   myX <- reshapeX(myX_flattened)
-  
+
   #This is what will accumulate the total cost
   total_cost <- 0
-  
+
   m <- n_training_samples
-  
+
   # irow <- 100
   for(irow in 1:m){
     myrow <- myX[irow, ]
-    myhs <- propagateForward(myrow,mythetas)[[2]][,2] 
+    myhs <- propagateForward(myrow,mythetas)[[2]][,2]
     tmpy <- myy[irow, ]
-    mycost <- - crossprod(c(tmpy, 1 - tmpy), c(log(myhs), log(1 - myhs))) 
+    mycost <- - crossprod(c(tmpy, 1 - tmpy), c(log(myhs), log(1 - myhs)))
     total_cost <- total_cost + mycost
   }
   total_cost <- total_cost / m
-  
+
   total_reg <- 0
   for(mytheta in mythetas){
     total_reg <- total_reg + sum(mytheta * mytheta)
@@ -91,18 +91,18 @@ computeCost <- function(mythetas_flattened, myX_flattened, myy, mylambda = 0){
 propagateForward <- function(row, Thetas){
   features <- row
   zs_as_per_layer <- list()
-  
+
   for(i in 1:length(Thetas)){
   # i <- 1
-    Theta <- Thetas[[i]] 
-    
+    Theta <- Thetas[[i]]
+
     #Theta1 is (25,401), features are (401, 1)
     #so "z" comes out to be (25, 1)
     #this is one "z" value for each unit in the hidden layer
     #not counting the bias unit
     z <- Theta %*% features
     a <- sig(z)
-    zs_as_per_layer[[i]] <- cbind(z, a) 
+    zs_as_per_layer[[i]] <- cbind(z, a)
     if(i == length(Thetas)) {
       return(zs_as_per_layer)
     }
@@ -133,13 +133,13 @@ genRandThetas <- function(epsilon_init = 0.12){
 backPropagate <- function(mythetas_flattened, myX_flattened, myy, mylambda = 0){
   # First unroll the parameters
   mythetas <- reshapeParams(mythetas_flattened)
-  
+
   # Now unroll X
   myX <- reshapeX(myX_flattened)
-  
+
   Delta1 = matrix(0, hidden_layer_size,input_layer_size+1)
   Delta2 = matrix(0, output_layer_size,hidden_layer_size+1)
-  
+
   m = n_training_samples
   # irow <- 1
   for(irow in 1:m){
@@ -152,8 +152,8 @@ backPropagate <- function(mythetas_flattened, myX_flattened, myy, mylambda = 0){
     z3 = temp[[2]][,1]
     a3 = temp[[2]][,2]
     tmpy <- myy[irow, ]
-    delta3 = a3 - tmpy 
-    
+    delta3 = a3 - tmpy
+
     delta2 <- (t(mythetas[[2]])[-1,] %*% delta3) * sigmoidGradient(z2)
     a2 <- c(1,a2)
     Delta1 <- Delta1 + delta2 %*% t(a1)
@@ -161,11 +161,11 @@ backPropagate <- function(mythetas_flattened, myX_flattened, myy, mylambda = 0){
   }
   D1 <- Delta1 / m
   D2 <- Delta2 / m
-  
+
   #Regularization:
   D1[, -1] <- D1[, -1] + (mylambda / m) * mythetas[[1]][,-1]
   D2[, -1] <- D2[, -1] + (mylambda / m) * mythetas[[2]][,-1]
-  
+
   return(unlist(list(D1, D2)))
 }
 
@@ -211,12 +211,12 @@ trainNN <- function(mylambda=0, it = 50){
 learned_Thetas <- trainNN()
 
 predictNN <- function(row,Thetas){
-  
+
 }
 
 NNpred <- function(myX,myThetas,myy){ #takes vector of ys
   apply(myX, 1, function(x){
-    which.max(propagateForward(x, myThetas)[[2]][,2]) 
+    which.max(propagateForward(x, myThetas)[[2]][,2])
     })
 }
 
