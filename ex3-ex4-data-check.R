@@ -1,0 +1,20 @@
+require(R.matlab)
+ex3data1 <- readMat("data/ex3data1.mat")
+ex4data1 <- readMat("ex4/ex4data1.mat")
+
+ex3weights <- readMat("data/ex3weights.mat")
+ex4weights <- readMat("ex4/ex4weights.mat")
+
+str(ex3data1)
+str(ex4data1)
+sum(ex3data1$X==ex4data1$X)
+sum(ex3data1$X!=ex4data1$X)
+sum(ex3data1$y==ex4data1$y)
+sum(ex3data1$y!=ex4data1$y)
+
+str(ex3weights)
+str(ex4weights)
+sum(ex3weights$Theta1==ex4weights$Theta1)
+sum(ex3weights$Theta1!=ex4weights$Theta1)
+sum(ex3weights$Theta2==ex4weights$Theta2)
+sum(ex3weights$Theta2!=ex4weights$Theta2)

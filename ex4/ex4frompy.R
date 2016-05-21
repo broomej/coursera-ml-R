@@ -1,6 +1,8 @@
+set.seed(1234)
 require(R.matlab)
-ex4data1 <- readMat("ex4data1.mat")
+ex4data1 <- readMat("data/ex3data1.mat")
 ex4data1$X <- cbind(1, ex4data1$X)
+
 # Sigmoid function
 sig <- function(x){
   1 / (1 + exp(-x))
@@ -11,9 +13,9 @@ for(i in 1:10){
   newy <- cbind(newy, ex4data1$y == i)
 }
 
-ex4weights <- readMat("ex4weights.mat")
+ex4weights <- readMat("data/ex3weights.mat")
 
-# from kaleko on Github
+# based on kaleko's python script on Github
 # https://github.com/kaleko/CourseraML/blob/master/ex4/ex4.ipynb
 
 input_layer_size <- 400
@@ -208,7 +210,9 @@ trainNN <- function(mylambda=0, it = 50){
                   method = "BFGS", control = list(maxit = it))
 }
 
+start_time <- Sys.time()
 learned_Thetas <- trainNN()
+print(Sys.time() - start_time)
 
 predictNN <- function(row,Thetas){
 
