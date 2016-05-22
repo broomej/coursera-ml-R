@@ -1,0 +1,60 @@
+---
+title: "Exercise 1"
+author: "Jai Broome"
+date: "May 21, 2016"
+output: html_document
+---
+```{r dependencies, message = FALSE}
+require(ggplot2)
+require(dplyr)
+require(knitr)
+```
+
+```{r read-transform}
+q1data <- read.table("../data/ex1data1.txt", 
+                     sep = ",", 
+                     col.names = c("population", "profit"))
+q1data$ones <- 1
+q1data <- q1data %>% select(ones, population, profit)
+X <- select(q1data, -profit)
+y <- q1data$profit
+m <- length(y)
+theta <- rep(0, times = 2)
+```
+
+```{r viz-exploration}
+g1 <- ggplot(q1data, aes(x = population, y = profit)) +
+    geom_point(shape = 4, color = "red", size = 3) +
+    xlab("Population of City in 10,000s") +
+    ylab("Profit in $10,000s")
+
+g1
+```
+
+```{r grad-descent-options}
+iterations <- 1500
+alpha <- 0.01
+```
+Functions are defined in a separate script so they can be accessed for other assignments. See `?knitr::read_chunk`
+```{r read_chunks}
+read_chunk("ex1_chunks.R")
+```
+
+```{r lin-reg-cost-func}
+```
+
+```{r gradStep}
+```
+
+```{r gradientDescent}
+```
+
+```{r implement-descent}
+jhist <- gradientDescent(X, y, theta, alpha, iterations)
+jhist <- jhist[2:(nrow(jhist) - 1),] #makes graph more interpretible 
+```
+
+```{r viz-results}
+ggplot(jhist, aes(x = iterations, y = loss)) + geom_line()
+g1 + geom_abline(slope = tail(jhist$theta1, n = 1), intercept = tail(jhist$theta0, n = 1))
+```

@@ -1,0 +1,48 @@
+---
+title: "Exercise 5"
+author: "Jai Broome"
+date: "May 21, 2016"
+output: html_document
+---
+
+```{r dependencies, message = FALSE}
+require(R.matlab)
+require(ggplot2)
+```
+
+```{r}
+train <- read.csv("../data/ex5train.csv")
+val <- read.csv("../data/ex5val.csv")
+test <- read.csv("../data/ex5test.csv")
+
+g <- ggplot(data = train, aes(X, y)) +
+    geom_point(shape = 4, color = "red", size = 3) +
+    labs(title = "Figure 1: Training Data", 
+         x = "Change in water level (X)", 
+         y = "Water flowing out of the dam (y)")
+g
+```
+
+
+# `read_chunk`
+```{r cache=FALSE}
+knitr::read_chunk('eg.R')
+```
+```{r test-a}
+```
+```{r test-b}
+```
+```{r test-c}
+```
+```{r}
+mean(train$X)
+```
+
+
+
+
+# `source`
+```{r cache=FALSE}
+source('eg.R')
+simple_function(53)
+```
