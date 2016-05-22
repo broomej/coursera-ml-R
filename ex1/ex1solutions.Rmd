@@ -18,7 +18,6 @@ q1data$ones <- 1
 q1data <- q1data %>% select(ones, population, profit)
 X <- select(q1data, -profit)
 y <- q1data$profit
-m <- length(y)
 theta <- rep(0, times = 2)
 ```
 

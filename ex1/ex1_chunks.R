@@ -1,10 +1,10 @@
 ## @knitr lin-reg-cost-func
-## I should go through and make m an argument to these functions
 computeCost <- function(X, y, theta, lambda = 0){
+    m <- nrow(X)
     pred <- theta %*% t(X)
     sqError <- (pred - y) ^ 2
     cost <- (1 / (2 * m)) * sum(sqError)
-    reg <- (lambda / (2 * m)) * theta[-1]^2
+    reg <- (lambda / (2 * m)) * sum(theta[-1]^2)
     J <- cost + reg
 
     gradient <- vector()
@@ -43,4 +43,9 @@ gradientDescent <- function(X, y, theta, alpha, iterations, lambda = 0){
     for(i in length(thetanames)){thetanames[i] <- paste("theta", i, sep = "")}
     colnames(J_history) <- c("loss", "iterations", "theta0", thetanames)
     return(J_history)
+}
+
+## @knitr featureNormalize
+featureNormalize <- function(X){
+    apply(X, 2, FUN = function(x){(x - mean(x)) / sd(x)})
 }
