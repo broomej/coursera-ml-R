@@ -2,7 +2,7 @@
 title: "Exercise 1"
 author: "Jai Broome"
 date: "May 21, 2016"
-output: html_document
+output: pdf_document
 ---
 ```{r dependencies, message = FALSE}
 require(ggplot2)
