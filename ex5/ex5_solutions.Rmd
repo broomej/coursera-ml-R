@@ -39,10 +39,7 @@ knitr::read_chunk('../ex1/ex1_chunks.R')
 ```
 
 ```{r gradient-check}
-theta <- c(1,1)
-X <- cbind(1, train$X)
-y <- train$y
-computeCost(X, y, theta)
+computeCost(cbind(1, train$X), train$y, c(1,1))
 ```
 
 ## Fitting linear regression
@@ -54,7 +51,7 @@ knitr::read_chunk('ex5_chunks.R')
 ```
 
 ```{r optim}
-learnedTheta <- trainLinearReg(X, y)
+learnedTheta <- trainLinearReg(cbind(1, train$X), train$y)
 ```
 
 ```{r plot-learnedTheta}
@@ -75,7 +72,7 @@ When you are computing the training set error, make sure you compute it on the t
 ```{r learningCurve}
 ```
 ```{r plot-learning-curves}
-errors <- learningCurve(X, y, cbind(1, val$X), val$y)
+errors <- learningCurve(cbind(1, train$X), train$y, cbind(1, val$X), val$y)
 g2 <- plotLearningCurve(errors)
 g2
 ```
@@ -94,3 +91,25 @@ g2
 ```{r}
 polyPlots(train$X, train$y, val$X, val$y, n = 12, lambda = 0, p = 8)
 ```
+
+## Optional (ungraded) exercise: Adjusting the regularization parameter
+
+I'll just add the optional exercises to the skeleton for now. The current plan is to finish all 8 assignments, then return to the optional exercises
+
+## Selecting λ using a cross validation set
+
+```{r validationCurve}
+```
+```{r test-validationCurve}
+lseq <- c(0, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10)
+errors <- validationCurve(polyFeatures(train$X, p = 8), 
+                          train$y, 
+                          polyFeatures(val$X, p = 8), 
+                          val$y, 
+                          lseq)
+
+errors[, 1] <- 1:10 # for interpretability in the plot
+plotLearningCurve(errors)
+```
+
+

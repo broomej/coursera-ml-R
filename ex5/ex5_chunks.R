@@ -22,19 +22,19 @@ learningCurve <- function(Xtrain, ytrain, Xval, yval, n = 12, lambda = 0){
         error_val <- computeCost(Xval, yval, params$par, lambda = lambda)
         error <- rbind(error, c(i, params$value, error_val$J))
     }
-    colnames(error) <- c("i", "error_train", "error_val")
+    colnames(error) <- c("tested.param", "error_train", "error_val")
     return(error)
 }
 
-#Must take a dataframe with colnames i, error_train & error_val
+#Must take a dataframe with colnames tested.param, error_train & error_val
 plotLearningCurve <- function(dat){
     ggplot(data = dat) +
-        geom_line(aes(x = i, y = error_train), color = "blue") +
-        geom_line(aes(x = i, y = error_val), color = "green")
+        geom_line(aes(x = tested.param, y = error_train), color = "blue") +
+        geom_line(aes(x = tested.param, y = error_val), color = "green")
 }
 
 ## @knitr polyFeatures
-polyFeatures <- function(X, p = 4){
+polyFeatures <- function(X, p = 8){
     polyX <- cbind(1, X)
     for(i in 2:p){
         polyX <- cbind(polyX, X ^ i)
@@ -59,6 +59,22 @@ polyPlots <- function(Xtrain, ytrain, Xval, yval, n = 12, lambda = 0, p){
 
     return(list(g.lc = g.lc, g.lm = g.lm))
 }
+
+## @knitr validationCurve
+validationCurve <- function(Xtrain, ytrain, Xval, yval, lambdas){
+    # takes a vector of lambda values
+    error <- data.frame()
+    for(l in lambdas){
+        params <- trainLinearReg(Xtrain, ytrain, l)
+
+        error_val <- computeCost(Xval, yval, params$par, lambda = l)
+        error <- rbind(error, c(l, params$value, error_val$J))
+    }
+    colnames(error) <- c("tested.param", "error_train", "error_val")
+    return(error)
+}
+
+
 
 ## @knitr random-learningCurve
 ## just randomize train, then call learningCurve
