@@ -19,8 +19,10 @@ learningCurve <- function(Xtrain, ytrain, Xval, yval, n = 12, lambda = 0){
         ytraini <- ytrain[1:i]
         params <- trainLinearReg(Xtraini, ytraini, lambda)
 
-        error_val <- computeCost(Xval, yval, params$par, lambda = lambda)
-        error <- rbind(error, c(i, params$value, error_val$J))
+        # Note that lambda is set to 0 here:
+        error_train <- computeCost(Xtraini, ytraini, params$par, lambda = 0)
+        error_val <- computeCost(Xval, yval, params$par, lambda = 0)
+        error <- rbind(error, c(i, error_train$J, error_val$J))
     }
     colnames(error) <- c("tested.param", "error_train", "error_val")
     return(error)
@@ -67,8 +69,10 @@ validationCurve <- function(Xtrain, ytrain, Xval, yval, lambdas){
     for(l in lambdas){
         params <- trainLinearReg(Xtrain, ytrain, l)
 
-        error_val <- computeCost(Xval, yval, params$par, lambda = l)
-        error <- rbind(error, c(l, params$value, error_val$J))
+        # Note that lambda is set to 0 here:
+        error_train <- computeCost(Xtrain, ytrain, params$par, lambda = 0)
+        error_val <- computeCost(Xval, yval, params$par, lambda = 0)
+        error <- rbind(error, c(l, error_train$J, error_val$J))
     }
     colnames(error) <- c("tested.param", "error_train", "error_val")
     return(error)

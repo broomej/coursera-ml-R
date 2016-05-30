@@ -1,5 +1,9 @@
 ## @knitr lin-reg-cost-func
 computeCost <- function(X, y, theta, lambda = 0){
+    if(is.null(dim(X))){
+        X <- t(data.frame(X))
+    }
+
     m <- nrow(X)
     pred <- theta %*% t(X)
     sqError <- (pred - y) ^ 2
@@ -7,8 +11,8 @@ computeCost <- function(X, y, theta, lambda = 0){
     reg <- (lambda / (2 * m)) * sum(theta[-1]^2)
     J <- cost + reg
 
-    gradient <- vector()
-    for(j in 1:length(theta)){
+    gradient <- (1 / m) * sum((pred - y) * X[, 1]) # first element unregularized
+    for(j in 2:length(theta)){
         gradient <- c(gradient, ((1 / m) * sum((pred - y) * X[, j]) + lambda * theta[j] / m))
     }
     return(list(J=J, gradient=gradient))

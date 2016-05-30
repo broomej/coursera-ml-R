@@ -8,6 +8,10 @@ output:
         number_sections: true
 ---
 
+```{r}
+source("ex5_chunks.R")
+source("../ex1/ex1_chunks.R")
+```
 
 ```{r dependencies, message = FALSE}
 require(ggplot2)
@@ -110,6 +114,8 @@ errors <- validationCurve(polyFeatures(train$X, p = 8),
 
 errors[, 1] <- 1:10 # for interpretability in the plot
 plotLearningCurve(errors)
+
+
 ```
 
 
