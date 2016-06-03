@@ -1,0 +1,23 @@
+---
+title: "Exercise 2"
+author: "Jai Broome"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    html_document:
+        toc: true
+        number_sections: true
+---
+
+```{r dependencies, message=FALSE}
+require(ggplot2)
+```
+
+Read in data and initialize theta
+
+```{r read-data}
+ex2data1 <- read.table("../data/ex2data1.txt", sep = ",")
+ex2data1 <- cbind(1, ex2data1)
+colnames(ex2data1) <- c("x0", "x1", "x2", "y")
+initial_theta <- rep(0, times = 3)
+```
+
