@@ -56,8 +56,7 @@ polyPlots <- function(Xtrain, ytrain, Xval, yval, n = 12, lambda = 0, p){
 
     errors <- learningCurve(polyX, ytrain, polyXval, yval, n, lambda)
     g.lc <- plotLearningCurve(errors)
-    g.lm <- "eventually I'll want to show the polynomial fit, but I'll \
-    revisit this"
+    g.lm <- "eventually I'll want to show the polynomial fit, but I'll revisit this"
 
     return(list(g.lc = g.lc, g.lm = g.lm))
 }
