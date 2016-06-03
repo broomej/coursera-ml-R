@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# https://www.coursera.org/learn/machine-learning/discussions/all/threads/O25D0QykEeWZSyIAC5bWOg\n\nX= c(1, 1, 1)\nX <- cbind(X, matrix(c(8, 1, 6, 3, 5, 7, 4, 9, 2), 3, 3, TRUE))\ny = c(7, 6, 5)\ntheta = c(0.1, 0.2, 0.3, 0.4)\ncomputeCost(X, y, theta, 0)\ncomputeCost(X, y, theta, 7)\n\n\n# --------------------------\n# lambda = 0  |   lambda = 7\n# --------------------------\n# J = 1.3533  |   J = 1.6917\n# g =         |   g =\n#    -1.4000  |      -1.4000\n#    -8.7333  |      -8.2667\n#    -4.3333  |      -3.6333\n#    -7.9333  |      -7.0000\n\n\n\nX = c(1, 2, 3, 4)\ny = 5\ntheta = c(0.1, 0.2, 0.3, 0.4)\ncomputeCost(X, y, theta, 7)\n\n# % results\n# J =  3.0150\n# g =\n#   -2.0000\n#   -2.6000\n#   -3.9000\n#   -5.2000\n\n\nX = [ones(5,1) reshape(-5:4,5,2)];\ny = [-2:2]';\nXval=[X;X]/10;\nyval=[y;y]/10;\n[et ev] = learningCurve(X,y,Xval,yval,1)\n# The solution I get is this:\n#\n# et =\n#\n# 0.000000\n# 0.031250\n# 0.013333\n# 0.005165\n# 0.002268\n#\n# ev =\n#\n# 3.0000e-002\n# 5.3125e-003\n# 6.0000e-004\n# 9.2975e-005\n# 2.2676e-005\n",
+    "created" : 1464632598597.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3270493382",
+    "id" : "15FE5B8C",
+    "lastKnownWriteTime" : 1464703606,
+    "last_content_update" : 1464703606907,
+    "path" : "~/coursera-ml-R/ex5/ex5_test.R",
+    "project_path" : "ex5/ex5_test.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

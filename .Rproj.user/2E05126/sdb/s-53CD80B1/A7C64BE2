@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "## @knitr lin-reg-cost-func\ncomputeCost <- function(X, y, theta, lambda = 0){\n    if(is.null(dim(X))){\n        X <- t(data.frame(X))\n    }\n\n    m <- nrow(X)\n    pred <- theta %*% t(X)\n    sqError <- (pred - y) ^ 2\n    cost <- (1 / (2 * m)) * sum(sqError)\n    reg <- (lambda / (2 * m)) * sum(theta[-1]^2)\n    J <- cost + reg\n\n    gradient <- (1 / m) * sum((pred - y) * X[, 1]) # first element unregularized\n    for(j in 2:length(theta)){\n        gradient <- c(gradient, ((1 / m) * sum((pred - y) * X[, j]) + lambda * theta[j] / m))\n    }\n    return(list(J=J, gradient=gradient))\n}\n\n## @knitr gradStep\ngradStep <- function(thetaj, alpha, gradj){\n    thetaj - alpha * gradj\n}\n\n## @knitr gradientDescent\ngradientDescent <- function(X, y, theta, alpha, iterations, lambda = 0){\n    if(length(theta) != ncol(X)){stop(\"theta and X are nonconformable\")}\n    J_history <- data.frame()\n    for (iteration in 1:iterations){\n\n        a <- computeCost(X = X, y = y, theta = theta, lambda = lambda)\n        J <- a$J\n        gradient <- a$gradient\n        J_history <- rbind(J_history, c(J, iteration - 1, theta))\n\n        thetaTemp <- vector()\n        for(j in 1:length(theta)){\n            thetaTemp <- c(thetaTemp, gradStep(theta[j], alpha, gradient[j]))\n        }\n        theta <- thetaTemp\n    }\n    # for final iteration\n    J <- computeCost(X = X, y = y, theta = theta, lambda = lambda)$J\n    J_history <- rbind(J_history, c(J, iteration, theta))\n    thetanames <- rep(\"theta\", times = length(theta) - 1)\n    for(i in length(thetanames)){thetanames[i] <- paste(\"theta\", i, sep = \"\")}\n    colnames(J_history) <- c(\"loss\", \"iterations\", \"theta0\", thetanames)\n    return(J_history)\n}\n\n## @knitr featureNormalize\nfeatureNormalize <- function(X){\n    apply(X, 2, FUN = function(x){(x - mean(x)) / sd(x)})\n}",
+    "created" : 1464631887769.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2301201989",
+    "id" : "A7C64BE2",
+    "lastKnownWriteTime" : 1464631345,
+    "last_content_update" : 1464631345,
+    "path" : "~/coursera-ml-R/ex1/ex1_chunks.R",
+    "project_path" : "ex1/ex1_chunks.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

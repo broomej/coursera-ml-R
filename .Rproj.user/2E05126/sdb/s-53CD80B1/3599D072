@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "## @knitr trainLinearReg\ntrainLinearReg <- function(X, y, lambda = 0){\n    if(is.null(dim(X))){\n        X <- t(data.frame(X))\n    }\n\n    theta <- rep(1, times = ncol(X))\n    optim(par = theta,\n          fn = function(par){computeCost(X, y, par, lambda)$J},\n          gr = function(par){computeCost(X, y, par, lambda)$gradient},\n          method = \"BFGS\", control = list(maxit = 400))\n}\n\n## @knitr learningCurve\nlearningCurve <- function(Xtrain, ytrain, Xval, yval, n = 12, lambda = 0){\n    error <- data.frame()\n    for(i in 1:n){\n        Xtraini <- Xtrain[1:i, ]\n        ytraini <- ytrain[1:i]\n        params <- trainLinearReg(Xtraini, ytraini, lambda)\n\n        # Note that lambda is set to 0 here:\n        error_train <- computeCost(Xtraini, ytraini, params$par, lambda = 0)\n        error_val <- computeCost(Xval, yval, params$par, lambda = 0)\n        error <- rbind(error, c(i, error_train$J, error_val$J))\n    }\n    colnames(error) <- c(\"tested.param\", \"error_train\", \"error_val\")\n    return(error)\n}\n\n#Must take a dataframe with colnames tested.param, error_train & error_val\nplotLearningCurve <- function(dat){\n    ggplot(data = dat) +\n        geom_line(aes(x = tested.param, y = error_train), color = \"blue\") +\n        geom_line(aes(x = tested.param, y = error_val), color = \"green\")\n}\n\n## @knitr polyFeatures\npolyFeatures <- function(X, p = 8){\n    polyX <- cbind(1, X)\n    for(i in 2:p){\n        polyX <- cbind(polyX, X ^ i)\n    }\n    return(polyX)\n}\n\n## @knitr polyPlots\npolyPlots <- function(Xtrain, ytrain, Xval, yval, n = 12, lambda = 0, p){\n    polyX <- polyFeatures(X = Xtrain, p)\n    polyX <- featureNormalize(polyX) #returns NaNs for x0\n    polyX[,1] <- 1\n\n    polyXval <- polyFeatures(Xval, p)\n    polyXval <- featureNormalize(polyXval)\n    polyXval[,1] <- 1\n\n    errors <- learningCurve(polyX, ytrain, polyXval, yval, n, lambda)\n    g.lc <- plotLearningCurve(errors)\n    g.lm <- \"eventually I'll want to show the polynomial fit, but I'll revisit this\"\n\n    return(list(g.lc = g.lc, g.lm = g.lm))\n}\n\n## @knitr validationCurve\nvalidationCurve <- function(Xtrain, ytrain, Xval, yval, lambdas){\n    # takes a vector of lambda values\n    error <- data.frame()\n    for(l in lambdas){\n        params <- trainLinearReg(Xtrain, ytrain, l)\n\n        # Note that lambda is set to 0 here:\n        error_train <- computeCost(Xtrain, ytrain, params$par, lambda = 0)\n        error_val <- computeCost(Xval, yval, params$par, lambda = 0)\n        error <- rbind(error, c(l, error_train$J, error_val$J))\n    }\n    colnames(error) <- c(\"tested.param\", \"error_train\", \"error_val\")\n    return(error)\n}\n\n\n\n## @knitr random-learningCurve\n## just randomize train, then call learningCurve\n\n",
+    "created" : 1464631874003.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1357889133",
+    "id" : "3599D072",
+    "lastKnownWriteTime" : 1464976572,
+    "last_content_update" : 1464976572,
+    "path" : "~/coursera-ml-R/ex5/ex5_chunks.R",
+    "project_path" : "ex5/ex5_chunks.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
