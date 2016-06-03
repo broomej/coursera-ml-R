@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "require(R.matlab)\nex4data1 <- readMat(\"ex4data1.mat\")\n\nnewy <- vector()\nfor(i in 1:10){\n  newy <- cbind(newy, ex4data1$y == i)\n}\n\n\n\n\nsig <- function(x){\n    1 / (1 + exp(-x))\n}\n\nh <- function(theta, x){\n    # matrix multiplication is pairwise multiplication, then summed\n    sig(sum(theta * x))\n}\n\n\n# From http://stackoverflow.com/questions/16700340/optimisation-in-r-using-ucminf-package\ncostFunction <- function(x, y, theta, lambda = 0){\n    m <- nrow(x)\n\n    J <- - (1 / m) * crossprod(c(y, 1 - y),\n                               c(log(sig(X %*% theta)), log(1 - sig(X%*% theta)))) +\n        (lambda / (2 * m)) * sum(theta ^ 2)\n\n    grad <- (1 / m) * crossprod(X, sig(X %*% theta) - y) +\n        (lambda / m) * theta\n    list(J = as.vector(J), grad = as.vector(grad))\n}\n\n# dfi <- cbind(ex4data1[, 1:401], ex4data1[, 402] == 1)\n# costFunction(dfi, initial_theta)\n#\n# optim(par = initial_theta,\n#       fn = function(x){costFunction(dfi, x)$J},\n#       gr = function(x){costFunction(dfi, x)$grad},\n#       method = \"BFGS\", control = list(maxit = 400))\n\nthetas <- data.frame()\n\nfor(i in 1:10){\n    dfi <- cbind(ex4data1[, 1:401], ex4data1[, 402] == i)\n    thetai <- optim(par = initial_theta,\n                       fn = function(x){costFunction(dfi, x)$J},\n                       gr = function(x){costFunction(dfi, x)$grad},\n                       method = \"BFGS\", control = list(maxit = 400))\n    thetas <- rbind(thetas, thetai$par)\n}\n\n\nex3pred1 <- apply(ex4data1, 1, FUN = function(x){\n    which.max(as.vector(apply(thetas, 1, FUN = function(y){\n        h(y, x[1:401])\n    })))\n})\n\nsum(ex4data1[, 402] == ex3pred1) / nrow(ex4data1)\n# This is a higher than the Matlab script\n\nex3weights <- readMat(\"ex3weights.mat\")\n\nz2 <- ex3weights$Theta1 %*% t(ex4data1[, 1:401])\na2 <- sig(z2)\na2 <- rbind(1, a2)\n\nz3 <- ex3weights$Theta2 %*% a2\na3 <- sig(z3)\n\nex3pred2 <- apply(a3, 2, which.max)\nsum(ex4data1[, 402] == ex3pred2) / nrow(ex4data1)\n",
+    "created" : 1462845943692.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3452423488",
+    "id" : "481A3BE8",
+    "lastKnownWriteTime" : 1462156969,
+    "last_content_update" : 1462156969,
+    "path" : "~/ex4/ex4.R",
+    "project_path" : "ex4.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

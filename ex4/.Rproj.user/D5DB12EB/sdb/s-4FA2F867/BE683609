@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "require(R.matlab)\nex4data1 <- readMat(\"ex4data1.mat\")\n\nnewy <- vector()\nfor(i in 1:10){\n  newy <- cbind(newy, ex4data1$y == i)\n}\n\nex4weights <- readMat(\"ex4weights.mat\")\n\n# from kaleko on Github\n# https://github.com/kaleko/CourseraML/blob/master/ex4/ex4.ipynb\n\ninput_layer_size <- 400\nhidden_layer_size <- 25\noutput_layer_size <- 10 \nn_training_samples <- 5000\n\n# unlist() does what flattenParams does in kaleko's python script\n\n\nreshapeParams <- function(flattened_array){\n  theta1 <- matrix(flattened_array[1:(input_layer_size+1)*hidden_layer_size],\n                   nrow = hidden_layer_size,\n                   ncol = input_layer_size + 1,\n                   byrow = TRUE)\n  \n  theta2 <- matrix(flattened_array[((input_layer_size+1)*hidden_layer_size + 1):\n                                     length(flattened_array)],\n                   nrow = output_layer_size,\n                   ncol = hidden_layer_size + 1,\n                   byrow = TRUE)\n  \n  return(list(theta1 = theta1, theta2 = theta2))\n}\n\nreshapeX <- function(flattenedX){\n  matrix(flattenedX,\n         nrow = n_training_samples,\n         ncol = input_layer_size+1,\n         byrow = TRUE)\n}\n\n\n\n\n \ncomputeCost <- function(mythetas_flattened, myX_flattened, myy, mylambda=0){\n  # Modified to take (m X k) dimensional y matrix\n  \n  # First unroll the parameters\n  mythetas <- reshapeParams(mythetas_flattened)\n  \n  # Now unroll X\n  myX <- reshapeX(myX_flattened)\n  \n  #This is what will accumulate the total cost\n  total_cost <- 0\n  \n  m <- n_training_samples\n  \n  for(irow in 1:m){\n    myrow <- myX[irow, ]\n    myhs <- propagateForward(myrow,mythetas)[-1][1] # Still need to update the indexing\n    tmpy <- myy[irow, ]\n    \n    mycost <- 1\n    total_cost <- total_cost + mycost\n  }\n  total_cost <- total_cost / m\n  \n  total_reg <- 0\n  \n  for(mytheta in mythetas){\n    total_reg <- total_reg + \n  }\n  \n}\n\n\n\n\n\n\n\n\n\n\n",
+    "created" : 1462847772635.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "345578972",
+    "id" : "BE683609",
+    "lastKnownWriteTime" : 1462933627,
+    "last_content_update" : 1462936669339,
+    "path" : "~/ex4/ex4frompy.R",
+    "project_path" : "ex4frompy.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
