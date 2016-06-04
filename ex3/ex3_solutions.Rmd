@@ -1,0 +1,34 @@
+---
+title: "Exercise 2"
+author: "Jai Broome"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    html_document:
+        toc: true
+        number_sections: true
+---
+
+```{r dependencies, message=FALSE}
+require(ggplot2)
+```
+
+```{r}
+ex3data1 <- read.csv("../data/ex3data1.csv")
+ex3data1 <- cbind(1, ex3data1$X, ex3data1$y)
+initial_theta <- rep(0, times = ncol(ex3data1) - 1)
+```
+
+```{r read_chunks}
+read_chunk("../ex2/ex2_chunks.R")
+```
+
+```{r sig}
+```
+
+```{r h}
+```
+
+```{r costFunction}
+
+```
+

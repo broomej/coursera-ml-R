@@ -1,3 +1,6 @@
+require(R.matlab)
+## ex3
+write.csv(x = readMat("data/ex3data1.mat"), file = "data/ex3data1.csv")
 ## ex5
 ex5data1 <- readMat("data/ex5data1.mat")
 train <- data.frame(ex5data1$X, ex5data1$y)
