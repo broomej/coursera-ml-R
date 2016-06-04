@@ -10,25 +10,37 @@ output:
 
 ```{r dependencies, message=FALSE}
 require(ggplot2)
+require(knitr)
 ```
 
 Read in data and initialize theta
 
 ```{r read-data}
-ex2data1 <- read.table("../data/ex2data1.txt", sep = ",")
+ex2data1 <- as.matrix(read.table("../data/ex2data1.txt", sep = ","))
 ex2data1 <- cbind(1, ex2data1)
-colnames(ex2data1) <- c("x0", "x1", "x2", "y")
 initial_theta <- rep(0, times = 3)
 ```
 
-```{r}
+```{r read_chunks}
+read_chunk("ex2_chunks.R")
+```
 
+```{r sig}
+```
+
+```{r h}
+```
+
+```{r costFunction}
+```
+
+```{r}
 newTheta <- optim(par = initial_theta,
       fn = function(x){costFunction(ex2data1, x)$J},
-      gr = function(x){costFunction(ex2data1, x)$gradient},
+      gr = function(x){costFunction(ex2data1, x)$grad},
       method = "BFGS", control = list(maxit = 400))
 
-ex2data2 <- read.table("ex2data2.txt", sep = ",")
+ex2data2 <- read.table("../data/ex2data2.txt", sep = ",")
 ggplot(ex2data2, aes(V1, V2)) + geom_point(aes(shape = as.factor(V3), color = as.factor(V3)))
 y <- ex2data2$V3
 
@@ -56,7 +68,7 @@ ex2data2.full <- cbind(allxs, y)
 
 initial_theta <- rep(0, times = 28)
 
-a <-costFunction(ex2data2.full, initial_theta)
+costFunction(ex2data2.full, initial_theta)
 ```
 
 

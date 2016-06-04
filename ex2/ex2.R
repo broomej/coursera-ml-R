@@ -1,18 +1,10 @@
-require(ggplot2)
 
-ex2data1 <- read.table("ex2data1.txt", sep = ",")
-ex2data1 <- cbind(1, ex2data1)
-colnames(ex2data1) <- c("x0", "x1", "x2", "y")
-initial_theta <- rep(0, times = 3)
 
-sig <- function(x){
-    1 / (1 + exp(-x))
-}
+## don't think i'll need this part
 
-h <- function(theta, x){
-    # matrix multiplication is pairwise multiplication, then summed
-    sig(sum(theta * x))
-}
+
+
+
 
 cost <- function(r, theta){ # Xs must be in order with Y at end
     x <- r[1:(length(r) - 1)]
@@ -56,39 +48,3 @@ costFunction <- function(df, theta, lambda = 0){
 ## costFunction(ex2data1, initial_theta)
 
 
-
-newTheta <- optim(par = initial_theta,
-      fn = function(x){costFunction(ex2data1, x)$J},
-      gr = function(x){costFunction(ex2data1, x)$gradient},
-      method = "BFGS", control = list(maxit = 400))
-
-ex2data2 <- read.table("ex2data2.txt", sep = ",")
-ggplot(ex2data2, aes(V1, V2)) + geom_point(aes(shape = as.factor(V3), color = as.factor(V3)))
-y <- ex2data2$V3
-
-x1s <- ex2data2[, 1]
-x2s <- ex2data2[, 2]
-
-for(i in 2:6){
-    x1s <- cbind(x1s, ex2data2[,1] ^ i)
-    }
-x1s <- cbind(1, x1s)
-
-for(i in 2:6){
-    x2s <- cbind(x2s, ex2data2[,1] ^ i)
-}
-x2s <- cbind(1, x2s)
-
-allxs <- vector()
-
-## We only want up to 6 degree polynomials, so this gives us too many
-for(i in 1:ncol(x2s)){
-    allxs <- cbind(allxs, x1s[, 1:(8-i)] * x2s[,i])
-}
-
-ex2data2.full <- cbind(allxs, y)
-
-initial_theta <- rep(0, times = 28)
-
-a <-costFunction(ex2data2.full, initial_theta)
-## still need to do optional exercises
