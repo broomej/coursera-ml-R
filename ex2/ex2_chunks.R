@@ -16,11 +16,10 @@ h <- function(theta, x){
 
 
 ## @knitr costFunction
-# From http://stackoverflow.com/questions/16700340/optimisation-in-r-using-ucminf-package
-costFunction <- function(df, theta, lambda = 0){
-    m <- nrow(df)
-    X <- df[, 1:(ncol(df) - 1)]
-    y <- df[, ncol(df)]
+costFunction <- function(M, theta, lambda = 0){
+    m <- nrow(M)
+    X <- M[, 1:(ncol(M) - 1)]
+    y <- M[, ncol(M)]
 
     J <- - (1 / m) * crossprod(c(y, 1 - y),
                                c(log(sig(X %*% theta)), log(1 - sig(X%*% theta)))) +
@@ -66,38 +65,4 @@ costFunction <- function(df, theta, lambda = 0){
 
 
 
-newTheta <- optim(par = initial_theta,
-      fn = function(x){costFunction(ex2data1, x)$J},
-      gr = function(x){costFunction(ex2data1, x)$gradient},
-      method = "BFGS", control = list(maxit = 400))
-
-ex2data2 <- read.table("ex2data2.txt", sep = ",")
-ggplot(ex2data2, aes(V1, V2)) + geom_point(aes(shape = as.factor(V3), color = as.factor(V3)))
-y <- ex2data2$V3
-
-x1s <- ex2data2[, 1]
-x2s <- ex2data2[, 2]
-
-for(i in 2:6){
-    x1s <- cbind(x1s, ex2data2[,1] ^ i)
-    }
-x1s <- cbind(1, x1s)
-
-for(i in 2:6){
-    x2s <- cbind(x2s, ex2data2[,1] ^ i)
-}
-x2s <- cbind(1, x2s)
-
-allxs <- vector()
-
-## We only want up to 6 degree polynomials, so this gives us too many
-for(i in 1:ncol(x2s)){
-    allxs <- cbind(allxs, x1s[, 1:(8-i)] * x2s[,i])
-}
-
-ex2data2.full <- cbind(allxs, y)
-
-initial_theta <- rep(0, times = 28)
-
-a <-costFunction(ex2data2.full, initial_theta)
 ## still need to do optional exercises

@@ -1,6 +1,17 @@
 require(R.matlab)
 ## ex3
-write.csv(x = readMat("data/ex3data1.mat"), file = "data/ex3data1.csv")
+ex3data1 <- readMat("data/ex3data1.mat")
+write.csv(x = cbind(ex3data1$X, ex3data1$y),
+          file = "data/ex3data1.csv",
+          row.names = FALSE)
+
+ex3weights <- readMat("data/ex3weights.mat")
+write.csv(x = ex3weights$Theta1,
+          file = "data/ex3weights_Theta1.csv",
+          row.names = FALSE)
+write.csv(x = ex3weights$Theta2,
+          file = "data/ex3weights_Theta2.csv",
+          row.names = FALSE)
 ## ex5
 ex5data1 <- readMat("data/ex5data1.mat")
 train <- data.frame(ex5data1$X, ex5data1$y)

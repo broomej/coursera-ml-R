@@ -9,12 +9,12 @@ output:
 ---
 
 ```{r dependencies, message=FALSE}
+require(knitr)
 require(ggplot2)
 ```
 
 ```{r}
-ex3data1 <- read.csv("../data/ex3data1.csv")
-ex3data1 <- cbind(1, ex3data1$X, ex3data1$y)
+ex3data1 <- cbind(1, as.matrix(read.csv("../data/ex3data1.csv")))
 initial_theta <- rep(0, times = ncol(ex3data1) - 1)
 ```
 
@@ -28,7 +28,47 @@ read_chunk("../ex2/ex2_chunks.R")
 ```{r h}
 ```
 
+From http://stackoverflow.com/questions/16700340/optimisation-in-r-using-ucminf-package
+
 ```{r costFunction}
+```
+
+```{r learn-thetas, cache=TRUE}
+thetas <- data.frame()
+
+for(i in 1:10){
+    Mi <- cbind(ex3data1[, 1:401], ex3data1[, 402] == i)
+    thetai <- optim(par = initial_theta,
+                       fn = function(x){costFunction(Mi, x)$J},
+                       gr = function(x){costFunction(Mi, x)$grad},
+                       method = "BFGS", control = list(maxit = 400))
+    thetas <- rbind(thetas, thetai$par)
+}
+
+```
+
+```{r eval-pred, cache=TRUE}
+ex3pred1 <- apply(ex3data1, 1, FUN = function(x){
+    which.max(as.vector(apply(thetas, 1, FUN = function(y){
+        h(y, x[1:401])
+    })))
+})
+
+sum(ex3data1[, 402] == ex3pred1) / nrow(ex3data1)
+# This is a higher than the Matlab script
+
+Theta1 <- as.matrix(read.csv("../data/ex3weights_Theta1.csv"))
+Theta2 <- as.matrix(read.csv("../data/ex3weights_Theta2.csv"))
+
+z2 <- Theta1 %*% t(ex3data1[, 1:401])
+a2 <- sig(z2)
+a2 <- rbind(1, a2)
+
+z3 <- Theta2 %*% a2
+a3 <- sig(z3)
+
+ex3pred2 <- apply(a3, 2, which.max)
+sum(ex3data1[, 402] == ex3pred2) / nrow(ex3data1)
 
 ```
 
