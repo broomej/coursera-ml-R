@@ -1,7 +1,7 @@
 ---
 title: "Exercise 1"
 author: "Jai Broome"
-date: "May 21, 2016"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
     html_document:
         toc: true

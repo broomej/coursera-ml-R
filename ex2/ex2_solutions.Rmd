@@ -13,35 +13,66 @@ require(ggplot2)
 require(knitr)
 ```
 
+# Logistic Regression
+
+## Visualizing the Data
+
 Read in data and initialize theta
 
 ```{r read-data}
-ex2data1 <- as.matrix(read.table("../data/ex2data1.txt", sep = ","))
+ex2data1 <- read.table("../data/ex2data1.txt", sep = ",")
 ex2data1 <- cbind(1, ex2data1)
 initial_theta <- rep(0, times = 3)
 ```
+
+```{r vizualize-data}
+g1 <- ggplot(ex2data1, 
+             aes(x = V1, y = V2, color = as.factor(V3), shape = as.factor(V3))) + 
+    geom_point()
+g1
+```
+
+## Implementation
 
 ```{r read_chunks}
 read_chunk("ex2_chunks.R")
 ```
 
+### Sigmoid function
+
 ```{r sig}
 ```
 
-```{r h}
-```
+### Cost function and gradient
+
 
 ```{r costFunction}
 ```
 
-```{r}
+### Learning parameters using `optim`
+
+```{r learn-theta}
+ex2data1 <- as.matrix(ex2data1)
 newTheta <- optim(par = initial_theta,
       fn = function(x){costFunction(ex2data1, x)$J},
       gr = function(x){costFunction(ex2data1, x)$grad},
       method = "BFGS", control = list(maxit = 400))
+```
 
+### Evaluating Logistic Regression
+
+# Regularized Logistic Regression
+
+## Visualizing the data
+
+```{r}
 ex2data2 <- read.table("../data/ex2data2.txt", sep = ",")
 ggplot(ex2data2, aes(V1, V2)) + geom_point(aes(shape = as.factor(V3), color = as.factor(V3)))
+```
+
+## Feature mapping
+
+```{r}
 y <- ex2data2$V3
 
 x1s <- ex2data2[, 1]
@@ -65,10 +96,17 @@ for(i in 1:ncol(x2s)){
 }
 
 ex2data2.full <- cbind(allxs, y)
+```
 
+## Cost function and gradient
+
+```{r}
 initial_theta <- rep(0, times = 28)
 
 costFunction(ex2data2.full, initial_theta)
 ```
 
+## Plotting the decision boundary
+
+## Optional (ungraded) exercises
 

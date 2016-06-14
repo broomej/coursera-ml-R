@@ -24,3 +24,32 @@ colnames(test) <- c("X", "y")
 write.csv(x = train, file = "data/ex5train.csv", row.names = F)
 write.csv(x = val, file = "data/ex5val.csv", row.names = F)
 write.csv(x = test, file = "data/ex5test.csv", row.names = F)
+
+## ex6
+ex6data1 <- readMat("data/ex6data/ex6data1.mat")
+write.csv(x = cbind(ex6data1$X, ex6data1$y),
+          file = "data/ex6data/ex6data1.csv",
+          row.names = FALSE)
+
+ex6data2 <- readMat("data/ex6data/ex6data2.mat")
+write.csv(x = cbind(ex6data2$X, ex6data2$y),
+          file = "data/ex6data/ex6data2.csv",
+          row.names = FALSE)
+
+ex6data3 <- readMat("data/ex6data/ex6data3.mat")
+write.csv(x = cbind(ex6data3$X, ex6data3$y),
+          file = "data/ex6data/ex6data3_train.csv",
+          row.names = FALSE)
+write.csv(x = cbind(ex6data3$Xval, ex6data3$yval),
+          file = "data/ex6data/ex6data3_val.csv",
+          row.names = FALSE)
+
+spamTrain <- readMat("data/ex6data/spamTrain.mat")
+write.csv(x = cbind(spamTrain$X, spamTrain$y),
+          file = "data/ex6data/spamTrain.csv",
+          row.names = FALSE)
+
+spamTest <- readMat("data/ex6data/spamTest.mat")
+write.csv(x = cbind(spamTest$X, spamTest$y),
+          file = "data/ex6data/spamTest.csv",
+          row.names = FALSE)

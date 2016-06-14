@@ -1,0 +1,69 @@
+---
+title: "Exercise 6"
+author: "Jai Broome"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    html_document:
+        toc: true
+        number_sections: true
+---
+
+```{r dependencies, message=FALSE}
+require(knitr)
+require(ggplot2)
+require(kernlab)
+```
+
+# Support Vector Machines
+
+## Example Dataset 1
+
+```{r read-data}
+ex6data1 <- read.csv("../data/ex6data/ex6data1.csv")
+ex6data1[, 3] <- as.factor(ex6data1[, 3])
+```
+
+```{r explore-data1}
+g1 <- ggplot(data = ex6data1, aes(V1, V2, color = V3, shape = V3)) + 
+    geom_point()
+g1
+```
+
+```{r}
+ex6data1 <- as.matrix(read.csv("../data/ex6data/ex6data1.csv"))
+ex6data1[, 3] <- as.factor(ex6data1[, 3])
+linSvm1 <- ksvm(x = ex6data1[, 2:1], 
+                y = ex6data1[, 3], 
+                C = 1,
+                type = "C-svc",
+                kernel = "vanilladot", 
+                kpar = list())
+plot(linSvm1, data = ex6data1[, 2:1])
+```
+```{r}
+linSvm2 <- ksvm(x = ex6data1[, 2:1], 
+                y = ex6data1[, 3], 
+                C = 100,
+                type = "C-svc",
+                kernel = "vanilladot", 
+                kpar = list())
+plot(linSvm2, data = ex6data1[, 2:1])
+```
+
+## SVM with Gaussian Kernels
+
+## Gaussian Kernel
+
+```{r read_chunk}
+read_chunk("ex6_chunks.R")
+```
+
+```{r gaussian-kernel}
+```
+
+```{r gk-test}
+gk(ex6data1[1, 1:2], ex6data1[51, 1:2], 0.1)
+rbf <- rbfdot(0.1)
+rbf(ex6data1[1, 1:2], ex6data1[51, 1:2])
+```
+
