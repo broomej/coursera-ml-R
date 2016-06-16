@@ -4,4 +4,7 @@ gk <- function(Xi, Xj, sigma){
     exp(-normSquared / (2 * sigma ^ 2)) # not working, but the formula looks correct
 }
 
-# norm_vec <- function(x) sqrt(sum(x^2))
+## @knitr sigma-transformation
+sigTransform <- function(sigma){
+    1 / (2 * sigma ^ 2)
+}

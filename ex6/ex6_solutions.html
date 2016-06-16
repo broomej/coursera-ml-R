@@ -117,7 +117,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Exercise 6</h1>
 <h4 class="author"><em>Jai Broome</em></h4>
-<h4 class="date"><em>09 June, 2016</em></h4>
+<h4 class="date"><em>15 June, 2016</em></h4>
 
 </div>
 
@@ -172,15 +172,21 @@ plot(linSvm2, data = ex6data1[, 2:1])</code></pre>
 <pre class="r"><code>gk &lt;- function(Xi, Xj, sigma){
     normSquared &lt;- sum((Xi - Xj) ^ 2) # seems to be working
     exp(-normSquared / (2 * sigma ^ 2)) # not working, but the formula looks correct
-}
-
-# norm_vec &lt;- function(x) sqrt(sum(x^2))</code></pre>
-<pre class="r"><code>gk(ex6data1[1, 1:2], ex6data1[51, 1:2], 0.1)</code></pre>
-<pre><code>## [1] 1.527487e-82</code></pre>
-<pre class="r"><code>rbf &lt;- rbfdot(0.1)
-rbf(ex6data1[1, 1:2], ex6data1[51, 1:2])</code></pre>
+}</code></pre>
+<p>Because the built-in Gaussian kernel function in <code>kernlab</code> takes a different <code>sigma</code> parameter, I’ve defined a function that will make it comparable to the way it’s calculated in the assignment.</p>
+<pre class="r"><code>sigTransform &lt;- function(sigma){
+    1 / (2 * sigma ^ 2)
+}</code></pre>
+<pre class="r"><code>x1 &lt;- c(1, 2, 1)
+x2 = c(0, 4, -1)
+sigma = 2
+gk(x1, x2, sigma) </code></pre>
+<pre><code>## [1] 0.3246525</code></pre>
+<pre class="r"><code>rbf &lt;- rbfdot(sigTransform(sigma))
+rbf(x1, x2)</code></pre>
 <pre><code>##           [,1]
-## [1,] 0.6860693</code></pre>
+## [1,] 0.3246525</code></pre>
+<p>This value should be about 0.324652</p>
 </div>
 </div>
 

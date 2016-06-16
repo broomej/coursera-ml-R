@@ -20,6 +20,8 @@ require(kernlab)
 
 ```{r read-data}
 ex6data1 <- read.csv("../data/ex6data/ex6data1.csv")
+x <- as.matrix(ex6data1[, 2:1])
+y <- as.matrix(ex6data1[, 3])
 ex6data1[, 3] <- as.factor(ex6data1[, 3])
 ```
 
@@ -30,16 +32,26 @@ g1
 ```
 
 ```{r}
-ex6data1 <- as.matrix(read.csv("../data/ex6data/ex6data1.csv"))
-ex6data1[, 3] <- as.factor(ex6data1[, 3])
-linSvm1 <- ksvm(x = ex6data1[, 2:1], 
-                y = ex6data1[, 3], 
+linSvm1 <- ksvm(x, 
+                y, 
                 C = 1,
                 type = "C-svc",
                 kernel = "vanilladot", 
                 kpar = list())
-plot(linSvm1, data = ex6data1[, 2:1])
+plot(linSvm1, data = x)
 ```
+
+```{r temp-chunk} 
+#not working
+plot(scale(linSvm1), data = x)
+w <- colSums(coef(linSvm1)[[1]] * ex6data1[unlist(alphaindex(linSvm1)), 2:1])
+b <- b(linSvm1)
+abline(b/w[1],-w[2]/w[1])
+abline((b+1)/w[1],-w[2]/w[1],lty=2)
+abline((b-1)/w[1],-w[2]/w[1],lty=2)
+```
+
+
 ```{r}
 linSvm2 <- ksvm(x = ex6data1[, 2:1], 
                 y = ex6data1[, 3], 
@@ -61,9 +73,18 @@ read_chunk("ex6_chunks.R")
 ```{r gaussian-kernel}
 ```
 
-```{r gk-test}
-gk(ex6data1[1, 1:2], ex6data1[51, 1:2], 0.1)
-rbf <- rbfdot(0.1)
-rbf(ex6data1[1, 1:2], ex6data1[51, 1:2])
+Because the built-in Gaussian kernel function in `kernlab` takes a different `sigma` parameter, I've defined a function that will make it comparable to the way it's calculated in the assignment.
+
+```{r sigma-transformation}
 ```
 
+```{r gk-test}
+x1 <- c(1, 2, 1)
+x2 = c(0, 4, -1)
+sigma = 2
+gk(x1, x2, sigma) 
+rbf <- rbfdot(sigTransform(sigma))
+rbf(x1, x2)
+```
+
+This value should be about 0.324652
