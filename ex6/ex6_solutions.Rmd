@@ -12,63 +12,59 @@ output:
 require(knitr)
 require(ggplot2)
 require(kernlab)
+read_chunk("ex6_chunks.R")
 ```
 
 # Support Vector Machines
 
 ## Example Dataset 1
 
-```{r read-data}
-ex6data1 <- read.csv("../data/ex6data/ex6data1.csv")
-x <- as.matrix(ex6data1[, 2:1])
-y <- as.matrix(ex6data1[, 3])
-ex6data1[, 3] <- as.factor(ex6data1[, 3])
+```{r read-data1}
+ex6data1 <- as.matrix(read.csv("../data/ex6data/ex6data1.csv"))
+x <- ex6data1[, 2:1]
 ```
 
-```{r explore-data1}
-g1 <- ggplot(data = ex6data1, aes(V1, V2, color = V3, shape = V3)) + 
+```{r -data1}
+g1 <- ggplot(data = as.data.frame(ex6data1), aes(V1, V2, shape = as.factor(V3))) + 
     geom_point()
 g1
 ```
 
 ```{r}
-linSvm1 <- ksvm(x, 
-                y, 
+linSvm1 <- ksvm(V3 ~ V2 + V1, 
+                data = ex6data1, 
                 C = 1,
                 type = "C-svc",
                 kernel = "vanilladot", 
-                kpar = list())
-plot(linSvm1, data = x)
+                kpar = list(),
+                scaled = F)
+plot(linSvm1, data = as.data.frame(ex6data1))
 ```
 
-```{r temp-chunk} 
-#not working
-plot(scale(linSvm1), data = x)
-w <- colSums(coef(linSvm1)[[1]] * ex6data1[unlist(alphaindex(linSvm1)), 2:1])
-b <- b(linSvm1)
-abline(b/w[1],-w[2]/w[1])
-abline((b+1)/w[1],-w[2]/w[1],lty=2)
-abline((b-1)/w[1],-w[2]/w[1],lty=2)
+```{r decision-boundary}
 ```
 
+```{r lin-plots}
+bound1 <- decisionBoundary(linSvm1)
+g2 <- g1 + geom_abline(intercept = bound1$intcpt, slope = bound1$slope, color = 2)
+g2
 
-```{r}
-linSvm2 <- ksvm(x = ex6data1[, 2:1], 
-                y = ex6data1[, 3], 
+linSvm2 <- ksvm(V3 ~ V2 + V1,
+                data = ex6data1,
                 C = 100,
                 type = "C-svc",
                 kernel = "vanilladot", 
-                kpar = list())
-plot(linSvm2, data = ex6data1[, 2:1])
+                kpar = list(),
+                scaled = F)
+
+bound2 <- decisionBoundary(linSvm2)
+g3 <- g2 + geom_abline(intercept = bound2$intcpt, slope = bound2$slope, color = 3)
+g3
 ```
 
 ## SVM with Gaussian Kernels
 
-## Gaussian Kernel
-
-```{r read_chunk}
-read_chunk("ex6_chunks.R")
-```
+### Gaussian Kernel
 
 ```{r gaussian-kernel}
 ```
@@ -82,9 +78,28 @@ Because the built-in Gaussian kernel function in `kernlab` takes a different `si
 x1 <- c(1, 2, 1)
 x2 = c(0, 4, -1)
 sigma = 2
-gk(x1, x2, sigma) 
+gk <- gkGenerator(sigma)
+gk(x1, x2)
+
 rbf <- rbfdot(sigTransform(sigma))
 rbf(x1, x2)
 ```
 
-This value should be about 0.324652
+This should be about 0.324652. For good measure, I also checked the value using the `rbfdot` function built into `kernlab`.
+
+### Example Dataset 2
+
+```{r read-data2}
+ex6data2 <- as.matrix(read.csv("../data/ex6data/ex6data2.csv"))
+ex6data2 <- ex6data2[, c(2, 1, 3)]
+gkSvm <- ksvm(V3 ~ V2 + V1,
+                data = ex6data2,
+                C = 1,
+                type = "C-svc",
+                kernel = gkGenerator, 
+                kpar = list(sigma = sigTransform(0.1)),
+                scaled = F)
+gkSvm
+plot(gkSvm, data = as.data.frame(ex6data2))
+```
+
