@@ -132,7 +132,9 @@ $(document).ready(function () {
 </ul></li>
 </ul></li>
 <li><a href="#spam-classification"><span class="toc-section-number">2</span> Spam Classification</a><ul>
-<li><a href="#preprocessing-emails"><span class="toc-section-number">2.1</span> Preprocessing Emails</a></li>
+<li><a href="#preprocessing-emails"><span class="toc-section-number">2.1</span> Preprocessing Emails</a><ul>
+<li><a href="#vocabulary-list"><span class="toc-section-number">2.1.1</span> Vocabulary List</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </div>
@@ -324,8 +326,6 @@ writeLines(lines)</code></pre>
 sampleEmail1</code></pre>
 <pre><code>## [1] &quot;&gt; Anyone knows how much it costs to host a web portal ? &gt; Well, it depends on how many visitors you're expecting. This can be anywhere from less than 10 bucks a month to a couple of $100.  You should checkout http://www.rackspace.com/ or perhaps Amazon EC2  if youre running something big..  To unsubscribe yourself from this mailing list, send an email to: groupname-unsubscribe@egroups.com &quot;</code></pre>
 <pre class="r"><code>preProcess &lt;- function(email){
-    # More help from kaleko on github
-    # https://github.com/kaleko/CourseraML/blob/master/ex6/ex6_spam.ipynb
     email &lt;- tolower(email)
     email &lt;- gsub('&lt;[^&lt;&gt;]+&gt;', ' ', email)
     email &lt;- gsub('[0-9]+', 'number', email)
@@ -334,7 +334,6 @@ sampleEmail1</code></pre>
     email &lt;- gsub('[$]+', 'dollar', email)
     email &lt;- gsub(&quot;'&quot;, &quot;&quot;, email) #prevent contractions from becoming 2 words
     email &lt;- gsub(&quot;[[:punct:]]+&quot;, &quot; &quot;, email)
-    # email &lt;- gsub(&quot;[[:space:]]{2,}&quot;, &quot; &quot;, email)
     # wordStem requires a vector of words
     email &lt;- strsplit(email, &quot; &quot;)[[1]]
     email &lt;- wordStem(email)
@@ -342,7 +341,8 @@ sampleEmail1</code></pre>
     email &lt;- email[email != &quot;&quot;]
     return(email)
 }</code></pre>
-<pre class="r"><code>preProcess(sampleEmail1)</code></pre>
+<pre class="r"><code>e1Processed &lt;- preProcess(sampleEmail1)
+e1Processed</code></pre>
 <pre><code>##  [1] &quot;anyon&quot;      &quot;know&quot;       &quot;how&quot;        &quot;much&quot;       &quot;it&quot;        
 ##  [6] &quot;cost&quot;       &quot;to&quot;         &quot;host&quot;       &quot;a&quot;          &quot;web&quot;       
 ## [11] &quot;portal&quot;     &quot;well&quot;       &quot;it&quot;         &quot;depend&quot;     &quot;on&quot;        
@@ -356,6 +356,65 @@ sampleEmail1</code></pre>
 ## [51] &quot;unsubscrib&quot; &quot;yourself&quot;   &quot;from&quot;       &quot;thi&quot;        &quot;mail&quot;      
 ## [56] &quot;list&quot;       &quot;send&quot;       &quot;an&quot;         &quot;email&quot;      &quot;to&quot;        
 ## [61] &quot;emailaddr&quot;</code></pre>
+<div id="vocabulary-list" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Vocabulary List</h3>
+<pre class="r"><code>vocabIndex &lt;- function(procEmail, vocab){
+    index &lt;- sapply(procEmail, FUN = function(x){match(x, vocab)})
+    index &lt;- index[!is.na(index)]
+    return(index)
+}</code></pre>
+<pre class="r"><code>emailVocab &lt;- read.table(&quot;../data/ex6data/vocab.txt&quot;, sep = &quot;\t&quot;)
+sampleIndexed &lt;- vocabIndex(e1Processed, emailVocab[, 2])
+sampleIndexed</code></pre>
+<pre><code>##      anyon       know        how       much         it       cost 
+##         86        916        794       1077        883        370 
+##         to       host        web       well         it     depend 
+##       1699        790       1822       1831        883        431 
+##         on        how       mani       your     expect        thi 
+##       1171        794       1002       1895        592       1676 
+##        can         be    anywher       from       less       than 
+##        238        162         89        688        945       1663 
+##     number      month         to      coupl         of dollarnumb 
+##       1120       1062       1699        375       1162        479 
+##        you     should   httpaddr         or     perhap         if 
+##       1893       1510        799       1182       1237        810 
+##       your        run     someth        big         to unsubscrib 
+##       1895       1440       1547        181       1699       1758 
+##   yourself       from        thi       mail       list       send 
+##       1896        688       1676        992        961       1477 
+##         an      email         to  emailaddr 
+##         71        530       1699        531</code></pre>
+<p>“Visitor” is left out of the supplied vocabulary, which is why there are only 44 non-zero entries. I’m not sure why it was included in the homework print out. It doesn’t seem to be a stemming implementation problem since “visitors” is successfully shortened to “visitor”, but there isn’t an entry for it in the vocabulary.</p>
+<pre class="r"><code>wordInIndex &lt;- function(x, index){x %in% index}
+
+emailFeatures &lt;- function(email, vocab){
+    index &lt;- as.vector(vocabIndex(email, vocab[, 2]))
+    features &lt;- sapply(vocab[, 1], FUN = function(x){wordInIndex(x, index)})
+    return(features)
+}</code></pre>
+<pre class="r"><code>e1Features &lt;- emailFeatures(e1Processed, emailVocab)
+str(e1Features)</code></pre>
+<pre><code>##  logi [1:1899] FALSE FALSE FALSE FALSE FALSE FALSE ...</code></pre>
+<pre class="r"><code>sum(e1Features)</code></pre>
+<pre><code>## [1] 44</code></pre>
+<pre class="r"><code>length(e1Features)</code></pre>
+<pre><code>## [1] 1899</code></pre>
+<pre class="r"><code>testIndices &lt;- c(86, 916, 794, 1077, 883, 370, 1699, 790, 1822, 1831, 883, 431, 
+                 1171, 794, 1002, 1893, 1364, 592, 1676, 238, 162, 89, 688, 945, 
+                 1663, 1120, 1062, 1699, 375, 1162, 479, 1893, 1510, 799, 1182, 
+                 1237, 810, 1895, 1440, 1547, 181, 1699, 1758, 1896, 688, 1676, 
+                 992, 961, 1477, 71, 530, 1699, 531)
+length(sampleIndexed)</code></pre>
+<pre><code>## [1] 52</code></pre>
+<pre class="r"><code>testIndices==sampleIndexed</code></pre>
+<pre><code>## Warning in testIndices == sampleIndexed: longer object length is not a
+## multiple of shorter object length</code></pre>
+<pre><code>##  [1]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [12]  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [23] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [34] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [45] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</code></pre>
+</div>
 </div>
 </div>
 

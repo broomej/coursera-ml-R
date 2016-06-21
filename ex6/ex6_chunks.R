@@ -45,8 +45,6 @@ testParams <- function(train, val, Cs, sigs){
 
 ## @knitr pre-process
 preProcess <- function(email){
-    # More help from kaleko on github
-    # https://github.com/kaleko/CourseraML/blob/master/ex6/ex6_spam.ipynb
     email <- tolower(email)
     email <- gsub('<[^<>]+>', ' ', email)
     email <- gsub('[0-9]+', 'number', email)
@@ -55,7 +53,6 @@ preProcess <- function(email){
     email <- gsub('[$]+', 'dollar', email)
     email <- gsub("'", "", email) #prevent contractions from becoming 2 words
     email <- gsub("[[:punct:]]+", " ", email)
-    # email <- gsub("[[:space:]]{2,}", " ", email)
     # wordStem requires a vector of words
     email <- strsplit(email, " ")[[1]]
     email <- wordStem(email)
@@ -63,3 +60,25 @@ preProcess <- function(email){
     email <- email[email != ""]
     return(email)
 }
+
+## @knitr vocab-index
+vocabIndex <- function(procEmail, vocab){
+    index <- sapply(procEmail, FUN = function(x){match(x, vocab)})
+    index <- index[!is.na(index)]
+    return(index)
+}
+
+
+
+## @knitr email-features
+wordInIndex <- function(x, index){x %in% index}
+
+emailFeatures <- function(email, vocab){
+    index <- as.vector(vocabIndex(email, vocab[, 2]))
+    features <- sapply(vocab[, 1], FUN = function(x){wordInIndex(x, index)})
+    return(features)
+}
+
+
+
+
