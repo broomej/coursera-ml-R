@@ -21,7 +21,7 @@ read_chunk("ex6_chunks.R")
 
 ```{r read-data1}
 ex6data1 <- as.matrix(read.csv("../data/ex6data/ex6data1.csv"))
-x <- ex6data1[, 2:1]
+# x <- ex6data1[, 2:1]
 ```
 
 ```{r -data1}
@@ -30,7 +30,7 @@ g1 <- ggplot(data = as.data.frame(ex6data1), aes(V1, V2, shape = as.factor(V3)))
 g1
 ```
 
-```{r}
+```{r linSvm1}
 linSvm1 <- ksvm(V3 ~ V2 + V1, 
                 data = ex6data1, 
                 C = 1,
@@ -38,7 +38,6 @@ linSvm1 <- ksvm(V3 ~ V2 + V1,
                 kernel = "vanilladot", 
                 kpar = list(),
                 scaled = F)
-plot(linSvm1, data = as.data.frame(ex6data1))
 ```
 
 ```{r decision-boundary}
@@ -46,7 +45,8 @@ plot(linSvm1, data = as.data.frame(ex6data1))
 
 ```{r lin-plots}
 bound1 <- decisionBoundary(linSvm1)
-g2 <- g1 + geom_abline(intercept = bound1$intcpt, slope = bound1$slope, color = 2)
+g2 <- g1 + geom_abline(intercept = bound1$intcpt, 
+                       slope = bound1$slope, aes(color = "c=1"))
 g2
 
 linSvm2 <- ksvm(V3 ~ V2 + V1,
@@ -58,9 +58,31 @@ linSvm2 <- ksvm(V3 ~ V2 + V1,
                 scaled = F)
 
 bound2 <- decisionBoundary(linSvm2)
-g3 <- g2 + geom_abline(intercept = bound2$intcpt, slope = bound2$slope, color = 3)
+g3 <- g2 + 
+    geom_abline(intercept = bound2$intcpt, 
+                slope = bound2$slope, aes(color = "c=100")) +
+  scale_colour_discrete("") 
 g3
 ```
+
+```{r}
+ggplot(data = as.data.frame(ex6data1), aes(V1, V2)) + #, shape = as.factor(V3)
+    geom_point() +
+    geom_abline(intercept = bound1$intcpt, 
+                slope = bound1$slope, aes(color = "abcd")) +
+    geom_abline(intercept = bound2$intcpt, 
+                slope = bound2$slope, aes(color = "xyz")) +
+    scale_colour_discrete("") 
+
+
+ggplot(as.data.frame(ex6data1), aes(x = V1, y = V2)) +
+  geom_point() + 
+  geom_abline(aes(colour="one-to-one"), intercept =0, slope = 1, size = 1) +
+  stat_smooth(aes(colour="best fit"), method = "lm", se = FALSE, size = 1) + 
+  #facet_wrap(~ type) +
+  scale_colour_discrete("")
+```
+
 
 ## SVM with Gaussian Kernels
 
@@ -91,7 +113,10 @@ This should be about 0.324652. For good measure, I also checked the value using 
 
 ```{r read-data2}
 ex6data2 <- as.matrix(read.csv("../data/ex6data/ex6data2.csv"))
-ex6data2 <- ex6data2[, c(2, 1, 3)]
+# ex6data2 <- ex6data2[, c(2, 1, 3)]
+```
+
+```{r}
 gkSvm <- ksvm(V3 ~ V2 + V1,
                 data = ex6data2,
                 C = 1,
@@ -101,5 +126,64 @@ gkSvm <- ksvm(V3 ~ V2 + V1,
                 scaled = F)
 gkSvm
 plot(gkSvm, data = as.data.frame(ex6data2))
+```
+
+### Example Dataset 3
+
+```{r read-data3}
+ex6data3_train <- as.matrix(read.csv("../data/ex6data/ex6data3_train.csv"))
+
+ex6data3_val <- as.matrix(read.csv("../data/ex6data/ex6data3_val.csv"))
+
+```
+
+```{r}
+g4 <- ggplot(as.data.frame(ex6data3_train), aes(V1, V2, shape = as.factor(V3),
+                                                color = as.factor(V3))) +
+    geom_point()
+g4
+```
+
+Test all combination of `C` and `sigma` for the values 0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30.
+
+```{r test-params}
+```
+
+```{r ex6data3-optim}
+v <- c(0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30)
+params3 <- testParams(ex6data3_train, ex6data3_val, v, v)
+min.val.error <- params3[which.min(params3$val.error),]
+svm3 <- ksvm(V3 ~ V2 + V1,
+             data = ex6data3_train,
+             C = min.val.error$C,
+             type = "C-svc",
+             kernel = gkGenerator,
+             kpar = list(sigma = sigTransform(min.val.error$sigma)))
+plot(svm3, data = as.data.frame(ex6data3_train))
+```
+
+# Spam Classification
+
+## Preprocessing Emails
+
+Sample email
+
+```{r sample-email}
+con <- file("../data/ex6data/emailSample1.txt", open = "r")
+writeLines(readLines(con))
+close(con)
+```
+
+```{r pre-process}
+```
+
+
+
+
+
+
+```{r}
+a <- readLines(con)
+a <- paste(a, collapse = "")
 ```
 
