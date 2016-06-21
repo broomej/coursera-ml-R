@@ -12,6 +12,7 @@ output:
 require(knitr)
 require(ggplot2)
 require(kernlab)
+require(SnowballC)
 read_chunk("ex6_chunks.R")
 ```
 
@@ -180,15 +181,7 @@ sampleEmail1
 ```{r pre-process}
 ```
 
-
-
-
-
-
-
-
-
-```{r}
+```{r pre-process-sample}
 preProcess(sampleEmail1)
 ```
 

@@ -49,9 +49,17 @@ preProcess <- function(email){
     # https://github.com/kaleko/CourseraML/blob/master/ex6/ex6_spam.ipynb
     email <- tolower(email)
     email <- gsub('<[^<>]+>', ' ', email)
-    email <- gsub('[0-9]+', ' number ', email)
-    email <- gsub("(http|https)://[^[:space:]]+", ' httpaddr', email) # leaves httpaddrspace.com/
-    email <- gsub('[^[:space:]]+@[^[:space:]]+', 'emailaddr', email) # leaves groupname-unsubsemailaddrs.com
-    email <- gsub('[$]+', ' dollar ', email)
+    email <- gsub('[0-9]+', 'number', email)
+    email <- gsub("(http|https)://[^[:space:]]+", ' httpaddr', email)
+    email <- gsub('[^[:space:]]+@[^[:space:]]+', 'emailaddr', email)
+    email <- gsub('[$]+', 'dollar', email)
+    email <- gsub("'", "", email) #prevent contractions from becoming 2 words
+    email <- gsub("[[:punct:]]+", " ", email)
+    # email <- gsub("[[:space:]]{2,}", " ", email)
+    # wordStem requires a vector of words
+    email <- strsplit(email, " ")[[1]]
+    email <- wordStem(email)
+    # # remove empty elements
+    email <- email[email != ""]
     return(email)
 }
