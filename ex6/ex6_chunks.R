@@ -49,9 +49,9 @@ preProcess <- function(email){
     # https://github.com/kaleko/CourseraML/blob/master/ex6/ex6_spam.ipynb
     email <- tolower(email)
     email <- gsub('<[^<>]+>', ' ', email)
-    email <- gsub('[0-9]+', 'number', email)
-    email <- gsub('(http|https)://[^\\s]*', 'httpaddr', email) # leaves httpaddrspace.com/
-    email <- gsub('[^\\s]+@[^\\s]+', 'emailaddr', email) # leaves groupname-unsubsemailaddrs.com
-    email <- gsub('[$]+', 'dollar ', email)
+    email <- gsub('[0-9]+', ' number ', email)
+    email <- gsub("(http|https)://[^[:space:]]+", ' httpaddr', email) # leaves httpaddrspace.com/
+    email <- gsub('[^[:space:]]+@[^[:space:]]+', 'emailaddr', email) # leaves groupname-unsubsemailaddrs.com
+    email <- gsub('[$]+', ' dollar ', email)
     return(email)
 }

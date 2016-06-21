@@ -170,8 +170,11 @@ Sample email
 
 ```{r sample-email}
 con <- file("../data/ex6data/emailSample1.txt", open = "r")
-writeLines(readLines(con))
+lines <- readLines(con)
 close(con)
+writeLines(lines)
+sampleEmail1 <- paste(lines, collapse = " ")
+sampleEmail1
 ```
 
 ```{r pre-process}
@@ -182,8 +185,10 @@ close(con)
 
 
 
+
+
+
 ```{r}
-a <- readLines(con)
-a <- paste(a, collapse = "")
+preProcess(sampleEmail1)
 ```
 
