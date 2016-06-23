@@ -13,6 +13,7 @@ require(knitr)
 require(ggplot2)
 require(kernlab)
 require(SnowballC)
+require(dplyr)
 read_chunk("ex6_chunks.R")
 ```
 
@@ -207,7 +208,6 @@ sampleIndexed
 "Visitor" is left out of the supplied vocabulary, which is why there are only 44 non-zero entries. I'm not sure why it was included in the homework print out. It doesn't seem to be a stemming implementation problem since "visitors" is successfully shortened to "visitor", but there isn't an entry for it in the vocabulary.
 
 ```{r email-features}
-
 ```
 
 
@@ -215,33 +215,46 @@ sampleIndexed
 e1Features <- emailFeatures(e1Processed, emailVocab)
 str(e1Features)
 sum(e1Features)
-length(e1Features)
 ```
 
+## Training SVM for Spam Classification
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-```{r, message=F}
-testIndices <- c(86, 916, 794, 1077, 883, 370, 1699, 790, 1822, 1831, 883, 431, 
-                 1171, 794, 1002, 1893, 1364, 592, 1676, 238, 162, 89, 688, 945, 
-                 1663, 1120, 1062, 1699, 375, 1162, 479, 1893, 1510, 799, 1182, 
-                 1237, 810, 1895, 1440, 1547, 181, 1699, 1758, 1896, 688, 1676, 
-                 992, 961, 1477, 71, 530, 1699, 531)
-length(sampleIndexed)
-testIndices==sampleIndexed
+```{r read-spam}
+spamTrain <- read.csv("../data/ex6data/spamTrain.csv")
+spamTest <- read.csv("../data/ex6data/spamTest.csv")
 ```
+
+```{r spam-train, cache = TRUE}
+spamSvm <- ksvm(V1900 ~ .,
+                data = spamTrain,
+                C = 0.1,
+                type = "C-svc",
+                kernel = "vanilladot", 
+                scaled = F)
+```
+
+```{r spam-predict}
+spamPredict <- predict(spamSvm, spamTest[, 1:(ncol(spamTest) - 1)])
+testAccuracy <- (sum(spamPredict==spamTest[, ncol(spamTest)])) /
+    length(spamPredict)
+```
+
+In sample accuracy is `r 100 * (1 - spamSvm@error[1])`% and out of sample accuracy is `r testAccuracy * 100`%.
+
+## Top Predictors for Spam
+
+```{r top-predictors}
+topPredictors <- as.data.frame(cbind(spamSvm@alphaindex[[1]],
+                                     spamSvm@coef[[1]]))
+topPredictors <-  arrange(topPredictors, desc(V2))
+emailVocab[topPredictors[1:15, 1],]
+```
+
+There were more highly predictive words for spam, but these are the first 15.
+
+
+
+
+
+
 
