@@ -1,0 +1,94 @@
+---
+title: "Exercise 7"
+author: "Jai Broome"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    html_document:
+        toc: true
+        number_sections: true
+---
+
+```{r dependencies, message=FALSE}
+require(ggplot2)
+require(knitr)
+read_chunk("ex7_chunks.R")
+```
+
+# $K$-means Clustering
+
+## Implementing $K$-means
+
+### Finding closest centroids
+
+```{r read-data2}
+ex7data2 <- read.csv("../data/ex7data/ex7data2.csv")
+```
+
+```{r explore-data}
+g1 <- ggplot(ex7data2, aes(V1, V2)) + geom_point()
+g1
+```
+
+
+```{r min-Eu-dist}
+```
+
+```{r test-min-distance}
+initial_centroids <- matrix(c(3, 3, 6, 2, 8, 5), 3, 2, TRUE)
+minEuDist(ex7data2[15,], initial_centroids)
+```
+
+```{r find-closest-centroids}
+```
+
+```{r test-find-centroids}
+idx <- findClosestCentroids(ex7data2, initial_centroids)
+idx[1:3]
+```
+
+### Computing centroid means
+
+```{r compute-centroids}
+```
+
+```{r test-compute-centroids}
+computeCentroids(ex7data2, idx, initial_centroids)
+```
+
+
+## $K$-means on example dataset
+
+```{r k-means}
+```
+
+```{r test-k-means}
+testKMeans <- kMeans(ex7data2, initial_centroids, 15)
+testKMeans[[15]]
+```
+
+```{r plot-test-k-means}
+
+```
+
+
+## Random initialization
+
+```{r}
+
+```
+
+## Image compression with K-means
+
+### $K$-means on pixels
+
+```{r}
+
+```
+
+### Optional (ungraded) exercise: Use your own image
+
+```{r}
+
+```
+
+# Principal Component Analysis
