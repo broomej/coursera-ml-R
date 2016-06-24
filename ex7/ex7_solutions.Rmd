@@ -67,7 +67,7 @@ testKMeans[[15]]
 ```
 
 ```{r plot-test-k-means}
-
+g1
 ```
 
 
