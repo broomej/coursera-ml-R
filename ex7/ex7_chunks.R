@@ -21,12 +21,13 @@ computeCentroids <- function(X, idx, K){
 
 ## @knitr k-means
 kMeans <- function(X, K, iter){
-    convergence <- list(list(NA, NA))
+    convergence <- matrix(nrow = iter + 1, ncol = nrow(X) + nrow(K) * ncol(K))
     for(i in 1:iter){
         idx <- findClosestCentroids(X, K)
+        convergence[i, ] <- c(idx, as.vector(t(K)))
         K <- computeCentroids(X, idx, K)
-        convergence[[i]] <- list(idx = idx, centroids = K)
     }
+    idx <- findClosestCentroids(X, K)
+    convergence[iter + 1, ] <- c(idx, as.vector(t(K)))
     return(convergence)
 }
-

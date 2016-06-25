@@ -11,6 +11,7 @@ output:
 ```{r dependencies, message=FALSE}
 require(ggplot2)
 require(knitr)
+require(tidyr)
 read_chunk("ex7_chunks.R")
 ```
 
@@ -62,14 +63,28 @@ computeCentroids(ex7data2, idx, initial_centroids)
 ```
 
 ```{r test-k-means}
-testKMeans <- kMeans(ex7data2, initial_centroids, 15)
-testKMeans[[15]]
+runKMeans <- kMeans(ex7data2, initial_centroids, 10)
+
+ex7data2 <- cbind(ex7data2, K = as.factor(runKMeans[nrow(runKMeans), 1:300]))
 ```
 
 ```{r plot-test-k-means}
-g1
+g2 <- ggplot(ex7data2, aes(V1, V2, color = K)) + 
+    geom_point(alpha = .4) + 
+    geom_line(data = as.data.frame(runKMeans[, 301:302]), 
+              mapping = aes(V1, V2, color = "1")) +
+    geom_line(data = as.data.frame(runKMeans[, 303:304]), 
+              mapping = aes(V1, V2, color = "2")) +
+    geom_line(data = as.data.frame(runKMeans[, 305:306]), 
+              mapping = aes(V1, V2, color = "3")) +
+    geom_point(data = as.data.frame(runKMeans[, 301:302]),
+               aes(V1, V2, color = "1"), shape = 4, size = 3) + 
+    geom_point(data = as.data.frame(runKMeans[, 303:304]),
+               aes(V1, V2, color = "2"), shape = 4, size = 3) +
+    geom_point(data = as.data.frame(runKMeans[, 305:306]),
+               aes(V1, V2, color = "3"), shape = 4, size = 3)
+g2 
 ```
-
 
 ## Random initialization
 
