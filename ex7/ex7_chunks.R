@@ -31,3 +31,6 @@ kMeans <- function(X, K, iter){
     convergence[iter + 1, ] <- c(idx, as.vector(t(K)))
     return(convergence)
 }
+
+## @knitr random-init
+randomInit <- function(X, n){X[sample(nrow(X), n), ]}

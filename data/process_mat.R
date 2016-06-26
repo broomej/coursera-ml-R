@@ -64,5 +64,7 @@ write.csv(x = ex7data2$X, file = "data/ex7data/ex7data2.csv", row.names = FALSE)
 ex7faces <- readMat("data/ex7data/ex7faces.mat")
 write.csv(x = ex7faces$X, file = "data/ex7data/ex7faces.csv", row.names = FALSE)
 
-bird_small <-readMat("data/ex7data/bird_small.mat")
+source("ex7/ex7_chunks.r")
+bird_small <-readMat("data/ex7data/bird_small.mat")$A
+bird_small <- aperm(bird_small, c(3, 1, 2))
 write.csv(x = bird_small$A, file = "data/ex7data/bird_small.csv", row.names = F)
