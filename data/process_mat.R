@@ -67,5 +67,6 @@ write.csv(x = ex7faces$X, file = "data/ex7data/ex7faces.csv", row.names = FALSE)
 bird_small <-readMat("data/ex7data/bird_small.mat")$A
 ## write.csv collapses the multidimensional array into a 2D array, so first I
 ## modify the indices so that it collapses correctly
+##
 bird_small <- aperm(bird_small, c(3, 1, 2))
 write.csv(x = bird_small, file = "data/ex7data/bird_small.csv", row.names = F)
