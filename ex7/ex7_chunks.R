@@ -34,3 +34,17 @@ kMeans <- function(X, K, iter){
 
 ## @knitr random-init
 randomInit <- function(X, n){X[sample(nrow(X), n), ]}
+
+
+
+
+
+r <- matrix(runif(9, 0, 1), 3)
+g <- matrix(runif(9, 0, 1), 3)
+b <- matrix(runif(9, 0, 1), 3)
+
+col <- rgb(r, g, b)
+dim(col) <- dim(r)
+
+library(grid)
+grid.raster(col, interpolate=FALSE)
