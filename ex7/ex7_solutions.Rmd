@@ -11,6 +11,7 @@ output:
 ```{r dependencies, message=FALSE}
 require(ggplot2)
 require(knitr)
+library(grid)
 read_chunk("ex7_chunks.R")
 ```
 
@@ -101,20 +102,35 @@ randomInit(ex7data2[,1:2], 3)
 
 ### $K$-means on pixels
 
-```{r cache=TRUE}
+```{r run-bird-k-means, cache=TRUE}
 bird_small <- t(read.csv("../data/ex7data/bird_small.csv"))
 birdInit <- randomInit(bird_small, 16)
 
-startTime <- system.time()
 kMeansBird <- kMeans(bird_small, birdInit, 15)
-system.time() - startTime
+```
 
+```{r compress-image}
 finalCentroid <- kMeansBird[nrow(kMeansBird),(ncol(kMeansBird)-16*3+1):ncol(kMeansBird)]
 finalCentroid <- round(matrix(finalCentroid, nrow = 16, ncol = 3, byrow = TRUE))
-compressedImage <- t(sapply(kMeansBird[nrow(kMeansBird), 1:128*128], FUN = function(x){
-    c(x, finalCentroid[x,])
-    }))
-### need to map it back to the pixel space
+# compressedImage <- t(sapply(kMeansBird[nrow(kMeansBird), 1:128*128], FUN = function(x){
+#     c(x, finalCentroid[x,])
+#     }))
+compressedImage <- matrix(kMeansBird[nrow(kMeansBird), 1:(128*128)])
+```
+
+If we take `compressedImage` and  `finalCentroid` together, this provides all the information needed. To reconstruct the image, I mapped it back into standard RGB values. Note that these are uncompressed.
+
+```{r}
+r <- sapply(compressedImage, function(x){finalCentroid[x, 1]})
+g <- sapply(compressedImage, function(x){finalCentroid[x, 2]})
+b <- sapply(compressedImage, function(x){finalCentroid[x, 3]})
+
+col <- rgb(r, g, b, maxColorValue = 255)
+dim(col) <- c(128, 128)
+```
+
+```{r print-compressed-image}
+grid.raster(col, interpolate=FALSE)
 ```
 
 ### Optional (ungraded) exercise: Use your own image
@@ -124,3 +140,54 @@ compressedImage <- t(sapply(kMeansBird[nrow(kMeansBird), 1:128*128], FUN = funct
 ```
 
 # Principal Component Analysis
+
+## Example Dataset
+
+```{r plot-pca-example}
+ex7data1 <- read.csv("../data/ex7data/ex7data1.csv")
+g3 <- ggplot(ex7data1, aes(V1, V2)) + geom_point()
+g3
+```
+
+## Implementing PCA
+
+```{r ex7data1-PCA}
+ex71normd <- apply(ex7data1, 2, function(x) x - mean(x))
+ex71svd <- svd(ex71normd)
+ex71svd$v
+ggplot(as.data.frame(ex71normd), aes(V1, V2)) + 
+    geom_point() + 
+    geom_abline(slope = ex71svd$v[2,1]/ex71svd$v[1,1], intercept = 0)
+```
+
+```{r}
+
+```
+
+
+
+
+
+
+
+We should expect to see (-0.707, -0.707).
+
+Need to plot the ex71svd$v over the scatterplot here
+
+## Dimensionality Reduction with PCA
+
+### Projecting the data onto the principal components
+
+### Reconstructing an approximation of the data
+
+### Visualizing the projections
+
+## Face Image Dataset
+
+plot faces here
+
+### PCA on Faces
+
+### Dimensionality Reduction
+
+## Optional (ungraded) exercise: PCA for visualization
