@@ -44,6 +44,7 @@ lines(predict(xy.lm), y, col=3)
 #######################
 ex7data1 <- read.csv("../data/ex7data/ex7data1.csv")
 ex71normd <- scale(ex7data1)
+ex71normd <- cbind()
 ex71svd <- svd(ex71normd)
 
 covM <- cov(ex71normd)

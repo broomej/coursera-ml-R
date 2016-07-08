@@ -152,12 +152,25 @@ g3
 ## Implementing PCA
 
 ```{r ex7data1-PCA}
-ex71normd <- apply(ex7data1, 2, function(x) x - mean(x))
+# ex71normd <- apply(ex7data1, 2, function(x) x - mean(x))
+ex71normd <- scale(ex7data1)
 ex71svd <- svd(ex71normd)
 ex71svd$v
 ggplot(as.data.frame(ex71normd), aes(V1, V2)) + 
     geom_point() + 
     geom_abline(slope = ex71svd$v[2,1]/ex71svd$v[1,1], intercept = 0)
+```
+
+The slope and intercept are of course 1 and 0 because it's been standardized and normalized. Using the same formula on the unadjusted plot shows the fit
+
+```{r unadjusted-plot}
+ex71svdUnadjusted <- svd(ex7data1)
+ggplot(as.data.frame(ex7data1), aes(V1, V2)) +
+    geom_point() +
+    geom_abline(slope = ex71svdUnadjusted$v[2,1]/ex71svdUnadjusted$v[1,1], intercept = )
+
+
+
 ```
 
 ```{r}
@@ -171,8 +184,6 @@ ggplot(as.data.frame(ex71normd), aes(V1, V2)) +
 
 
 We should expect to see (-0.707, -0.707).
-
-Need to plot the ex71svd$v over the scatterplot here
 
 ## Dimensionality Reduction with PCA
 
