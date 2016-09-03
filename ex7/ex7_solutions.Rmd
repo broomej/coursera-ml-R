@@ -151,39 +151,34 @@ g3
 
 ## Implementing PCA
 
+A note about SVD in R—unlike in Matlab, where the function returns the three matrices `U`, `S`, and `V`, `svd` returns a vector `D` containing the singular values of the input matrix, of length `min(n, p)` rather than a matrix `S`. It took me longer than I'd like to admit to figure this out.
+
 ```{r ex7data1-PCA}
 # ex71normd <- apply(ex7data1, 2, function(x) x - mean(x))
 ex71normd <- scale(ex7data1)
-ex71svd <- svd(ex71normd)
-ex71svd$v
-ggplot(as.data.frame(ex71normd), aes(V1, V2)) + 
-    geom_point() + 
-    geom_abline(slope = ex71svd$v[2,1]/ex71svd$v[1,1], intercept = 0)
+ex71svd <- svd(cov(ex71normd))
+# We should expect the first principal component to be -0.707, -0.707
+ex71svd$v[, 1]
 ```
 
-The slope and intercept are of course 1 and 0 because it's been standardized and normalized. Using the same formula on the unadjusted plot shows the fit
+### Plotting the eigenvectors of the scatterplot
 
-```{r unadjusted-plot}
-ex71svdUnadjusted <- svd(ex7data1)
-ggplot(as.data.frame(ex7data1), aes(V1, V2)) +
-    geom_point() +
-    geom_abline(slope = ex71svdUnadjusted$v[2,1]/ex71svdUnadjusted$v[1,1], intercept = )
+The eigenvectors are centered at the mean of the data, and extend to the product of the singular values and left singular vectors. I again got some help from [kaleko](https://github.com/kaleko/CourseraML/blob/master/ex7/ex7.ipynb) and he multiplied the endpoint of the vectors by 1.5, which I've done here as well. I'm not sure why that's the case, but it appears to match the figure in the assignment sheet. Regardless, for dimensionality reduction, only the direction of the vector matters.
 
+```{r eigenvectors, fig.width=6, fig.height=6}
+ex71means <- apply(ex7data1, 2, mean)
 
+g4 <- g3 + geom_segment(x = ex71means[1], 
+                 xend = ex71means[1] + 1.5 * ex71svd$d[1] * ex71svd$u[1,1], 
+                 y = ex71means[2], 
+                 yend = ex71means[2] + 1.5 * ex71svd$d[1] * ex71svd$u[1,2]) +
+    geom_segment(x = ex71means[1], 
+                 xend = ex71means[1] + 1.5 * ex71svd$d[2] * ex71svd$u[2,1], 
+                 y = ex71means[2], 
+                 yend = ex71means[2] + 1.5 * ex71svd$d[2] * ex71svd$u[2,2])
+g4
 
 ```
-
-```{r}
-
-```
-
-
-
-
-
-
-
-We should expect to see (-0.707, -0.707).
 
 ## Dimensionality Reduction with PCA
 

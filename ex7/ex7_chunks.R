@@ -34,3 +34,9 @@ kMeans <- function(X, K, iter){
 
 ## @knitr random-init
 randomInit <- function(X, n){X[sample(nrow(X), n), ]}
+
+## @knitr sig
+sig <- function(X){(t(X) %*% X) / nrow(X)}
+
+
+sig(matrix(rnorm(88), 44, 2))
