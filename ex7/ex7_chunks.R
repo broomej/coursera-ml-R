@@ -14,7 +14,7 @@ computeCentroids <- function(X, idx, K){
     newCentroids <- K
     for(k in 1:nrow(K)){
         Xk <- X[k == idx,]
-        newCentroids[k, ] <- apply(Xk, 2, sum) / nrow(Xk)
+        newCentroids[k, ] <- apply(Xk, 2, mean)
     }
     return(newCentroids)
 }
@@ -50,8 +50,7 @@ recoverData <- function(Z, U, K){
 
 ## @knitr plot-faces
 plotFaces <- function(X){
-    # This assumes there will be at least 100 square, grayscale pictures,
-    # already scaled to (0, 1)
+    # This assumes there will be at least 100 square, grayscale pictures
     k <- sqrt(ncol(X))
     X <- X[1:100,]
     Xreshaped <- matrix(nrow = k * 10, ncol = 0)

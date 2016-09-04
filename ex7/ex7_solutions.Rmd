@@ -30,6 +30,7 @@ g1 <- ggplot(ex7data2, aes(V1, V2)) + geom_point()
 g1
 ```
 
+This part is fairly straightforward, but it's broken into parts to make it easier to debug. `minEuDist` takes a coordinate and a vector of centroid coordinates and returns the index of the nearest one.
 
 ```{r min-Eu-dist}
 ```
@@ -42,12 +43,18 @@ minEuDist(ex7data2[15,], initial_centroids)
 ```{r find-closest-centroids}
 ```
 
+`findClosestCentroids` applies `minEuDist` over an array.
+
+We should see the output [1 3 2] corresponding to the centroid assignments for the first 3 examples.
+
 ```{r test-find-centroids}
 idx <- findClosestCentroids(ex7data2, initial_centroids)
 idx[1:3]
 ```
 
 ### Computing centroid means
+
+The other part of K-means clustering is updating the value of the centroids. This function takes the array of points, their initial assignment to a centroid, and the positions of the centroids. The data are then subsetted by centroid, and that centroid is moved to the new average value of those points that are assigned to it.
 
 ```{r compute-centroids}
 ```
@@ -58,6 +65,8 @@ computeCentroids(ex7data2, idx, initial_centroids)
 
 
 ## $K$-means on example dataset
+
+`runKMeans` saves the values of the centroids that way we can plot their trajectory.
 
 ```{r k-means}
 ```
@@ -112,13 +121,10 @@ kMeansBird <- kMeans(bird_small, birdInit, 15)
 ```{r compress-image}
 finalCentroid <- kMeansBird[nrow(kMeansBird),(ncol(kMeansBird)-16*3+1):ncol(kMeansBird)]
 finalCentroid <- round(matrix(finalCentroid, nrow = 16, ncol = 3, byrow = TRUE))
-# compressedImage <- t(sapply(kMeansBird[nrow(kMeansBird), 1:128*128], FUN = function(x){
-#     c(x, finalCentroid[x,])
-#     }))
 compressedImage <- matrix(kMeansBird[nrow(kMeansBird), 1:(128*128)])
 ```
 
-If we take `compressedImage` and  `finalCentroid` together, this provides all the information needed. To reconstruct the image, I mapped it back into standard RGB values. Note that these are uncompressed.
+If we take `compressedImage` and  `finalCentroid` together, this provides all the information needed. To reconstruct the image, we map it back into standard RGB values. Note that these are uncompressed.
 
 ```{r}
 r <- sapply(compressedImage, function(x){finalCentroid[x, 1]})
@@ -163,6 +169,8 @@ ex71svd$v[, 1]
 ### Plotting the eigenvectors of the scatterplot
 
 The eigenvectors are centered at the mean of the data, and extend to the product of the singular values and left singular vectors. I again got some help from [kaleko](https://github.com/kaleko/CourseraML/blob/master/ex7/ex7.ipynb) and he multiplied the endpoint of the vectors by 1.5, which I've done here as well. I'm not sure why that's the case, but it appears to match the figure in the assignment sheet. Regardless, for dimensionality reduction, only the direction of the vector matters.
+
+We plot these figures with the same scale on both axes so the eigenvectors appear perpendicular. 
 
 ```{r eigenvectors, fig.width=6, fig.height=6}
 ex71means <- apply(ex7data1, 2, mean)
@@ -238,8 +246,9 @@ ex7faces <- as.matrix(read.csv("../data/ex7data/ex7faces.csv"))
 ```{r plot-faces, fig.width=6, fig.width=6}
 ```
 
-Figure width/height not working here
-```{r view-faces, fig.width=6, fig.width=6}
+I'm having a hell of a time getting these to display correctly so I'll come back to it later. I think the easiest way to do it will be to write the image to a file then display it here.
+
+```{r view-faces}
 ex7faces <- (ex7faces + 128) / 256
 plotFaces(ex7faces)
 ```
@@ -258,6 +267,5 @@ facesProjectd <- projectData(X = facesScaled, U = facesSvd$u, K = 100)
 facesRecovered <- recoverData(facesProjectd, facesSvd$u, 100)
 plotFaces(facesRecovered)
 ```
-
 
 ## Optional (ungraded) exercise: PCA for visualization
