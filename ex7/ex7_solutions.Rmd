@@ -232,12 +232,15 @@ g5
 ## Face Image Dataset
 
 ```{r read-faces, cache = T}
-ex7faces <- read.csv("../data/ex7data/ex7faces.csv")
+ex7faces <- as.matrix(read.csv("../data/ex7data/ex7faces.csv"))
 ```
 
+```{r plot-faces, fig.width=6, fig.width=6}
+```
 
-```{r view-faces}
-
+Figure width/height not working here
+```{r view-faces, fig.width=6, fig.width=6}
+plotFaces(ex7faces)
 ```
 
 ### PCA on Faces
