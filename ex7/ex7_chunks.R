@@ -38,5 +38,12 @@ randomInit <- function(X, n){X[sample(nrow(X), n), ]}
 ## @knitr sig
 sig <- function(X){(t(X) %*% X) / nrow(X)}
 
+## @knitr project-data
+projectData <- function(X, U, K){
+    X %*% U[, 1:K]
+}
 
-sig(matrix(rnorm(88), 44, 2))
+## @knitr recover-data
+recoverData <- function(Z, U, K){
+    Z %*% t(U[, 1:K])
+}

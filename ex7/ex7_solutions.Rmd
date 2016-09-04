@@ -143,7 +143,7 @@ grid.raster(col, interpolate=FALSE)
 
 ## Example Dataset
 
-```{r plot-pca-example}
+```{r plot-pca-example, fig.width=6, fig.height=6}
 ex7data1 <- read.csv("../data/ex7data/ex7data1.csv")
 g3 <- ggplot(ex7data1, aes(V1, V2)) + geom_point()
 g3
@@ -153,8 +153,7 @@ g3
 
 A note about SVD in R—unlike in Matlab, where the function returns the three matrices `U`, `S`, and `V`, `svd` returns a vector `D` containing the singular values of the input matrix, of length `min(n, p)` rather than a matrix `S`. It took me longer than I'd like to admit to figure this out.
 
-```{r ex7data1-PCA}
-# ex71normd <- apply(ex7data1, 2, function(x) x - mean(x))
+```{r ex7data1-svd}
 ex71normd <- scale(ex7data1)
 ex71svd <- svd(cov(ex71normd))
 # We should expect the first principal component to be -0.707, -0.707
@@ -184,13 +183,62 @@ g4
 
 ### Projecting the data onto the principal components
 
+```{r project-data}
+```
+
+We should see a value of about 1.481.
+
+```{r project-data-test}
+Z <- projectData(ex71normd, ex71svd$u, 1)
+Z[1]
+```
+
 ### Reconstructing an approximation of the data
+
+```{r recover-data}
+```
+
+We should see a value of about [-1.047 -1.047].
+
+```{r recover-data-test}
+X_rec <- recoverData(Z, ex71svd$u, 1)
+X_rec[1,]
+```
 
 ### Visualizing the projections
 
+```{r viz-projections, fig.width=6, fig.height=6}
+m <- as.data.frame(ex71normd)
+m$pc <- "Original"
+
+n <- as.data.frame(X_rec)
+n$pc <- "Projected"
+
+ex71projected <- rbind(m, n)
+rm(m)
+rm(n)
+
+ex71projected$pc <- as.factor(ex71projected$pc)
+ex71projected$match <- 1:50
+
+g5 <- ggplot(ex71projected, aes(V1, V2, group = match)) +
+    geom_point(aes(color = pc)) +
+    geom_line(linetype = "dotdash") +
+    theme(legend.position="none")
+g5
+```
+
+
 ## Face Image Dataset
 
-plot faces here
+```{r read-faces, cache = T}
+ex7faces <- read.csv("../data/ex7data/ex7faces.csv")
+```
+
+
+```{r view-faces}
+
+```
 
 ### PCA on Faces
 
