@@ -240,11 +240,24 @@ ex7faces <- as.matrix(read.csv("../data/ex7data/ex7faces.csv"))
 
 Figure width/height not working here
 ```{r view-faces, fig.width=6, fig.width=6}
+ex7faces <- (ex7faces + 128) / 256
 plotFaces(ex7faces)
 ```
 
 ### PCA on Faces
 
+```{r ex7-faces-pca}
+facesScaled <- scale(ex7faces)
+facesSvd <- svd(cov(facesScaled))
+facesProjectd <- projectData(X = facesScaled, U = facesSvd$u, K = 100)
+```
+
 ### Dimensionality Reduction
+
+```{r plot-recovered-faces}
+facesRecovered <- recoverData(facesProjectd, facesSvd$u, 100)
+plotFaces(facesRecovered)
+```
+
 
 ## Optional (ungraded) exercise: PCA for visualization

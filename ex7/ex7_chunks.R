@@ -50,23 +50,20 @@ recoverData <- function(Z, U, K){
 
 ## @knitr plot-faces
 plotFaces <- function(X){
-    # This assumes there will be at least 100 entries, each 32X32 grayscale
+    # This assumes there will be at least 100 square, grayscale pictures,
+    # already scaled to (0, 1)
+    k <- sqrt(ncol(X))
     X <- X[1:100,]
-    X <- (X + 128) / 256
-
-    Xreshaped <- matrix(nrow = 320, ncol = 0)
+    Xreshaped <- matrix(nrow = k * 10, ncol = 0)
     for(i in 1:10){
-        Xtall <- matrix(nrow = 0, ncol = 32)
+        Xtall <- matrix(nrow = 0, ncol = k)
         for(j in (10 * i - 9):(10 * i)){
             ## The indexing is a little weird because we want 1:10, then 11:20,
             ## etc.
-            face <- matrix(X[j,], 32, 32, TRUE)[, 32:1]
+            face <- matrix(X[j,], k, k, TRUE)[, k:1]
             Xtall <- rbind(Xtall, face)
         }
         Xreshaped <- cbind(Xreshaped, Xtall)
     }
-    ####
-    ####
-
     image(Xreshaped, axes = F, col = grey(seq(0, 1, length = 256)))
 }
