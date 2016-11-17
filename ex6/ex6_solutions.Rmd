@@ -1,0 +1,260 @@
+---
+title: "Exercise 6"
+author: "Jai Broome"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    html_document:
+        toc: true
+        number_sections: true
+---
+
+```{r dependencies, message=FALSE}
+require(knitr)
+require(ggplot2)
+require(kernlab)
+require(SnowballC)
+require(dplyr)
+read_chunk("ex6_chunks.R")
+```
+
+# Support Vector Machines
+
+## Example Dataset 1
+
+```{r read-data1}
+ex6data1 <- as.matrix(read.csv("../data/ex6data/ex6data1.csv"))
+# x <- ex6data1[, 2:1]
+```
+
+```{r -data1}
+g1 <- ggplot(data = as.data.frame(ex6data1), aes(V1, V2, shape = as.factor(V3))) + 
+    geom_point()
+g1
+```
+
+```{r linSvm1}
+linSvm1 <- ksvm(V3 ~ V2 + V1, 
+                data = ex6data1, 
+                C = 1,
+                type = "C-svc",
+                kernel = "vanilladot", 
+                kpar = list(),
+                scaled = F)
+```
+
+```{r decision-boundary}
+```
+
+**Still need to get the lines to color properly**
+
+```{r lin-plots}
+bound1 <- decisionBoundary(linSvm1)
+g2 <- g1 + geom_abline(intercept = bound1$intcpt, 
+                       slope = bound1$slope, aes(color = "c=1"))
+g2
+
+linSvm2 <- ksvm(V3 ~ V2 + V1,
+                data = ex6data1,
+                C = 100,
+                type = "C-svc",
+                kernel = "vanilladot", 
+                kpar = list(),
+                scaled = F)
+
+bound2 <- decisionBoundary(linSvm2)
+g3 <- g2 + 
+    geom_abline(intercept = bound2$intcpt, 
+                slope = bound2$slope, aes(color = "c=100")) +
+  scale_colour_discrete("") 
+g3
+```
+
+```{r}
+ggplot(data = as.data.frame(ex6data1), aes(V1, V2)) + #, shape = as.factor(V3)
+    geom_point() +
+    geom_abline(intercept = bound1$intcpt, 
+                slope = bound1$slope, aes(color = "abcd")) +
+    geom_abline(intercept = bound2$intcpt, 
+                slope = bound2$slope, aes(color = "xyz")) +
+    scale_colour_discrete("") 
+
+
+ggplot(as.data.frame(ex6data1), aes(x = V1, y = V2)) +
+  geom_point() + 
+  geom_abline(aes(colour="one-to-one"), intercept =0, slope = 1, size = 1) +
+  stat_smooth(aes(colour="best fit"), method = "lm", se = FALSE, size = 1) + 
+  #facet_wrap(~ type) +
+  scale_colour_discrete("")
+```
+
+
+## SVM with Gaussian Kernels
+
+### Gaussian Kernel
+
+I use the `ksvm` function from the `kernlab` package. One thing to note is that in order to use a custom kernel, I need to define a function that takes the hyperparameters from a `ksvm` call and generates a function that takes two vectors.
+
+```{r gaussian-kernel}
+```
+
+Because the built-in Gaussian kernel function in `kernlab` takes a different `sigma` parameter, I've defined a function that will make it comparable to the way it's calculated in the assignment.
+
+```{r sigma-transformation}
+```
+
+```{r gk-test}
+x1 <- c(1, 2, 1)
+x2 = c(0, 4, -1)
+sigma = 2
+gk <- gkGenerator(sigma)
+gk(x1, x2)
+
+rbf <- rbfdot(sigTransform(sigma))
+rbf(x1, x2)
+```
+
+This should be about 0.324652. For good measure, I also checked the value using the `rbfdot` function built into `kernlab`.
+
+### Example Dataset 2
+
+```{r read-data2}
+ex6data2 <- as.matrix(read.csv("../data/ex6data/ex6data2.csv"))
+# ex6data2 <- ex6data2[, c(2, 1, 3)]
+```
+
+```{r}
+gkSvm <- ksvm(V3 ~ V2 + V1,
+                data = ex6data2,
+                C = 1,
+                type = "C-svc",
+                kernel = gkGenerator, 
+                kpar = list(sigma = sigTransform(0.1)),
+                scaled = F)
+gkSvm
+
+# Note that the sigma value is different because of the transformation
+
+plot(gkSvm, data = as.data.frame(ex6data2))
+```
+
+### Example Dataset 3
+
+```{r read-data3}
+ex6data3_train <- as.matrix(read.csv("../data/ex6data/ex6data3_train.csv"))
+
+ex6data3_val <- as.matrix(read.csv("../data/ex6data/ex6data3_val.csv"))
+
+```
+
+```{r}
+g4 <- ggplot(as.data.frame(ex6data3_train), aes(V1, V2, shape = as.factor(V3),
+                                                color = as.factor(V3))) +
+    geom_point()
+g4
+```
+
+Test all combination of `C` and `sigma` for the values 0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30.
+
+```{r test-params}
+```
+
+```{r ex6data3-optim, cache=TRUE}
+v <- c(0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30)
+params3 <- testParams(ex6data3_train, ex6data3_val, v, v)
+min.val.error <- params3[which.min(params3$val.error),]
+svm3 <- ksvm(V3 ~ V2 + V1,
+             data = ex6data3_train,
+             C = min.val.error$C,
+             type = "C-svc",
+             kernel = gkGenerator,
+             kpar = list(sigma = sigTransform(min.val.error$sigma)))
+plot(svm3, data = as.data.frame(ex6data3_train))
+```
+
+# Spam Classification
+
+## Preprocessing Emails
+
+Sample email
+
+```{r sample-email}
+con <- file("../data/ex6data/emailSample1.txt", open = "r")
+lines <- readLines(con)
+close(con)
+writeLines(lines)
+sampleEmail1 <- paste(lines, collapse = " ")
+sampleEmail1
+```
+
+```{r pre-process}
+```
+
+```{r pre-process-sample}
+e1Processed <- preProcess(sampleEmail1)
+e1Processed
+```
+
+### Vocabulary List
+
+```{r vocab-index}
+```
+
+```{r}
+emailVocab <- read.table("../data/ex6data/vocab.txt", sep = "\t")
+sampleIndexed <- vocabIndex(e1Processed, emailVocab[, 2])
+sampleIndexed
+```
+
+"Visitor" is left out of the supplied vocabulary, which is why there are only 44 non-zero entries. I'm not sure why it was included in the homework print out. It doesn't seem to be a stemming implementation problem since "visitors" is successfully shortened to "visitor", but there isn't an entry for it in the vocabulary.
+
+```{r email-features}
+```
+
+
+```{r}
+e1Features <- emailFeatures(e1Processed, emailVocab)
+str(e1Features)
+sum(e1Features)
+```
+
+## Training SVM for Spam Classification
+
+```{r read-spam}
+spamTrain <- read.csv("../data/ex6data/spamTrain.csv")
+spamTest <- read.csv("../data/ex6data/spamTest.csv")
+```
+
+```{r spam-train, cache = TRUE}
+spamSvm <- ksvm(V1900 ~ .,
+                data = spamTrain,
+                C = 0.1,
+                type = "C-svc",
+                kernel = "vanilladot", 
+                scaled = F)
+```
+
+```{r spam-predict}
+spamPredict <- predict(spamSvm, spamTest[, 1:(ncol(spamTest) - 1)])
+testAccuracy <- (sum(spamPredict==spamTest[, ncol(spamTest)])) /
+    length(spamPredict)
+```
+
+In sample accuracy is `r 100 * (1 - spamSvm@error[1])`% and out of sample accuracy is `r testAccuracy * 100`%.
+
+## Top Predictors for Spam
+
+```{r top-predictors}
+topPredictors <- as.data.frame(cbind(spamSvm@alphaindex[[1]],
+                                     spamSvm@coef[[1]]))
+topPredictors <-  arrange(topPredictors, desc(V2))
+emailVocab[topPredictors[1:15, 1],]
+```
+
+There were more highly predictive words for spam, but these are the first 15.
+
+
+
+
+
+
+
