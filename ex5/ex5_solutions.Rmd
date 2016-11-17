@@ -1,0 +1,126 @@
+---
+title: "Exercise 5"
+author: "Jai Broome"
+date: "May 21, 2016"
+output: 
+    html_document:
+        toc: true
+        number_sections: true
+---
+
+```{r}
+source("ex5_chunks.R")
+source("../ex1/ex1_chunks.R")
+```
+
+```{r dependencies, message = FALSE}
+require(ggplot2)
+```
+The `.mat` files have already been read in and saved as `.csv`s since Knitr doesn't play nice with `R.matlab`.
+```{r read-data}
+train <- read.csv("../data/ex5train.csv")
+val <- read.csv("../data/ex5val.csv")
+test <- read.csv("../data/ex5test.csv")
+```
+
+# Regularized Linear Regression
+
+## Visualizing the dataset
+```{r viz-train}
+g1 <- ggplot(data = train, aes(X, y)) +
+    geom_point(shape = 4, color = "red", size = 3) +
+    labs(title = "Figure 1: Training Data", 
+         x = "Change in water level (X)", 
+         y = "Water flowing out of the dam (y)")
+g1
+```
+
+## Regularized linear regression cost function
+```{r ex1_chunks}
+knitr::read_chunk('../ex1/ex1_chunks.R')
+```
+```{r lin-reg-cost-func}
+```
+
+```{r gradient-check}
+computeCost(cbind(1, train$X), train$y, c(1,1))
+```
+
+## Fitting linear regression
+```{r ex5_chunks}
+knitr::read_chunk('ex5_chunks.R')
+```
+
+```{r trainLinearReg}
+```
+
+```{r optim}
+learnedTheta <- trainLinearReg(cbind(1, train$X), train$y)
+```
+
+```{r plot-learnedTheta}
+g1 + geom_abline(slope = learnedTheta$par[2], intercept = learnedTheta$par[1])
+
+lm(y ~ X + 1, train)$coefficients
+learnedTheta$par
+```
+
+`learnedTheta` matches the coefficients from `R`'s built-in linear regression function
+
+# Bias-variance
+Note that the lambda is passed as a parameter to the `learningCurve` function.
+
+When you are computing the training set error, make sure you compute it on the training subset (i.e., X(1:n,:) and y(1:n)) (instead of the entire training set). However, for the cross validation error, you should compute it over the entire cross validation set. You should store the computed errors in the vectors error\_train and error\_val.
+
+## Learning curves
+```{r learningCurve}
+```
+```{r plot-learning-curves}
+errors <- learningCurve(cbind(1, train$X), train$y, cbind(1, val$X), val$y)
+g2 <- plotLearningCurve(errors)
+g2
+```
+
+# Polynomial regression
+```{r polyFeatures}
+```
+
+## Learning Polynomial Regression
+
+```{r featureNormalize}
+```
+```{r polyPlots}
+```
+
+```{r}
+polyPlots(train$X, train$y, val$X, val$y, n = 12, lambda = 0, p = 8)
+```
+
+## Optional (ungraded) exercise: Adjusting the regularization parameter
+
+I'll just add the optional exercises to the skeleton for now. The current plan is to finish all 8 assignments, then return to the optional exercises
+
+## Selecting λ using a cross validation set
+
+```{r validationCurve}
+```
+```{r test-validationCurve}
+lseq <- c(0, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10)
+vCurveTrainX <- featureNormalize(polyFeatures(train$X, p = 8))
+vCurveTrainX[, 1] <- 1
+vCurveValX <- featureNormalize(polyFeatures(val$X, p = 8))
+vCurveValX[, 1] <- 1
+
+errors <- validationCurve(vCurveTrainX, 
+                          train$y, 
+                          vCurveValX, 
+                          val$y, 
+                          lseq)
+
+# errors[, 1] <- 1:10 # for interpretability in the plot
+plotLearningCurve(errors)
+
+
+```
+
+
