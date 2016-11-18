@@ -41,9 +41,3 @@ findDecisionBoundary <- function(pts = matrix(c(50,75,75,50), 2, 2), theta){
     newYs <- unlist(newYs[1:2])
     data.frame(x = pts[, 1], oldY = pts[, 2], newY = newYs)
 }
-
-abcd <- optim(par = 75,
-              fn = function(x){(h(c(1, 50, x), newTheta$par) - 0.5) ^ 2},
-              method = "BFGS", control = list(maxit = 400))
-
-

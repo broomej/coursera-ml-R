@@ -49,7 +49,7 @@ g1 + ggtitle("Figure 1: Scatter plot of training data")
 
 ### Cost function and gradient
 
-Note that `costFunction` takes a matrix `M` with the outcome in the last column, and separates it into Xs and Y. Note that I've implemented regularization for the first exercise so the function can be reused for the second exercise.
+Note that `costFunction` takes a matrix `M` with the outcome in the last column, and separates it into Xs and Y. Note that I've implemented regularization for the first exercise so the function can be reused for the second part of this exercise.
 
 ```{r cost-function}
 ```
@@ -121,14 +121,20 @@ g2 + ggtitle("Figure 2: Training data with decision boundary")
 
 ## Visualizing the data
 
-```{r}
+```{r plot-ex2data2}
 ex2data2 <- read.table("../data/ex2data2.txt", sep = ",")
-ggplot(ex2data2, aes(V1, V2)) + geom_point(aes(shape = as.factor(V3), color = as.factor(V3)))
+g3 <- ggplot(ex2data2, aes(V1, V2)) + 
+    geom_point(aes(color = as.factor(V3))) +
+    labs(x = "Microchip Test 1",
+         y = "Microchip Test 2",
+         color = "Legend\n") +
+    scale_color_manual(labels = c("Fail", "Pass"), values = c(1, 2))
+g3 + ggtitle("Figure 3: Plot of training data")
 ```
 
 ## Feature mapping
 
-```{r}
+```{r feature-map}
 y <- ex2data2$V3
 
 x1s <- ex2data2[, 1]
@@ -146,7 +152,6 @@ x2s <- cbind(1, x2s)
 
 allxs <- vector()
 
-## We only want up to 6 degree polynomials, so this gives us too many
 for(i in 1:ncol(x2s)){
     allxs <- cbind(allxs, x1s[, 1:(8-i)] * x2s[,i])
 }
@@ -156,11 +161,23 @@ ex2data2.full <- cbind(allxs, y)
 
 ## Cost function and gradient
 
-```{r}
-initial_theta <- rep(0, times = 28)
+From the exercise sheet, we should expect an initial cost of about 0.693. 
 
-costFunction(ex2data2.full, initial_theta)
+```{r test-initial-params}
+initial_theta <- rep(0, times = 28)
+costFunction(ex2data2.full, initial_theta)$J
 ```
+
+###  Learning parameters using `optim`
+
+```{r}
+newTheta2 <- optim(par = initial_theta,
+      fn = function(x){costFunction(ex2data2.full, x)$J},
+      gr = function(x){costFunction(ex2data2.full, x)$grad},
+      method = "BFGS", control = list(maxit = 1000))
+```
+
+Unfortunately, there isn't a numerical check I can do to make sure this is correct.
 
 ## Plotting the decision boundary
 
