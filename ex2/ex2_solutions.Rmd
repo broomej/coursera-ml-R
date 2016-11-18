@@ -13,6 +13,10 @@ require(ggplot2)
 require(knitr)
 ```
 
+```{r read_chunks}
+read_chunk("ex2_chunks.R")
+```
+
 # Logistic Regression
 
 ## Visualizing the Data
@@ -26,17 +30,18 @@ initial_theta <- rep(0, times = 3)
 ```
 
 ```{r vizualize-data}
-g1 <- ggplot(ex2data1, 
-             aes(x = V1, y = V2, color = as.factor(V3), shape = as.factor(V3))) + 
-    geom_point()
+g1 <- ggplot(ex2data1, aes(x = V1, y = V2, color = as.factor(V3))) + 
+    geom_point() +
+    labs(title = "Figure 1: Scatter plot of training data", 
+         x = "Exam 1 Score",
+         y = "Exam 2 Score",
+         color = "Legend\n") +
+    scale_color_manual(labels = c("Not Admitted", "Admitted"), values = c(1,2))
 g1
 ```
 
-## Implementation
 
-```{r read_chunks}
-read_chunk("ex2_chunks.R")
-```
+## Implementation
 
 ### Sigmoid function
 
@@ -45,11 +50,14 @@ read_chunk("ex2_chunks.R")
 
 ### Cost function and gradient
 
+Note that `costFunction` takes a matrix `M` with the outcome in the last column, and separates it into Xs and Y. Note that I've implemented regularization for the first exercise so the function can be reused for the second exercise.
 
 ```{r costFunction}
 ```
 
 ### Learning parameters using `optim`
+
+I used R's `optim` as an alternative to Matlab's `fminunc`. `costFunction` returns both the cost and the gradient.
 
 ```{r learn-theta}
 ex2data1 <- as.matrix(ex2data1)
@@ -60,6 +68,21 @@ newTheta <- optim(par = initial_theta,
 ```
 
 ### Evaluating Logistic Regression
+
+```{r test-scores}
+testScores <- c(45, 85)
+```
+
+With test scores of `r testScores`, we should see an admission probability of 0.776.
+
+```{r h}
+```
+
+
+```{r eval-log-reg}
+h(newTheta$par, c(1, testScores)) # Include the x0 term
+```
+
 
 # Regularized Logistic Regression
 
