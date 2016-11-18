@@ -1,4 +1,5 @@
-## Source this script from parent directory
+## Call this script from the top level directory
+
 
 require(R.matlab)
 ## ex3
