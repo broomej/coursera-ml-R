@@ -204,8 +204,11 @@ newTheta &lt;- optim(par = initial_theta,
     # matrix multiplication is pairwise multiplication, then summed
     sig(sum(theta * x))
 }</code></pre>
-<pre class="r"><code>h(newTheta$par, c(1, testScores))</code></pre>
+<pre class="r"><code>h(newTheta$par, c(1, testScores)) # Include the x0 term</code></pre>
 <pre><code>## [1] 0.7756949</code></pre>
+<pre class="r"><code>predLogReg &lt;- function(M, theta){
+
+}</code></pre>
 </div>
 </div>
 </div>

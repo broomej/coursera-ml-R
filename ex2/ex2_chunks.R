@@ -7,7 +7,7 @@ h <- function(theta, x){
     sig(sum(theta * x))
 }
 
-## @knitr costFunction
+## @knitr cost-function
 costFunction <- function(M, theta, lambda = 0){
     m <- nrow(M)
     X <- M[, 1:(ncol(M) - 1)]
@@ -20,4 +20,14 @@ costFunction <- function(M, theta, lambda = 0){
     grad <- (1 / m) * crossprod(X, sig(X %*% theta) - y) +
         (lambda / m) * theta
     list(J = as.vector(J), grad = as.vector(grad))
+}
+
+## @knitr pred-log-reg
+predLogReg <- function(M, theta){
+    apply(M[, seq_along(theta)], 1, function(x){h(theta, x)})
+}
+
+## @knitr find-decision-boundary
+findDecisionBoundary <- function(){
+
 }
