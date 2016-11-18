@@ -13,10 +13,22 @@ require(knitr)
 require(ggplot2)
 ```
 
+# Multi-class Classification
+
+## Dataset
+
 ```{r}
 ex3data1 <- cbind(1, as.matrix(read.csv("../data/ex3data1.csv")))
 initial_theta <- rep(0, times = ncol(ex3data1) - 1)
 ```
+
+##  Visualizing the data
+
+## Vectorizing Logistic Regression
+
+### Vectorizing the cost function
+
+I already implemented a vectorized vesion for exercise 2. I make use of `ex2_chunks.R` which contains all of the functions written forthe previous exercise.
 
 ```{r read_chunks}
 read_chunk("../ex2/ex2_chunks.R")
