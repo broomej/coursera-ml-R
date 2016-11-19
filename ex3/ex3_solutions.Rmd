@@ -17,12 +17,14 @@ require(ggplot2)
 
 ## Dataset
 
-```{r}
+```{r read-data-1}
 ex3data1 <- cbind(1, as.matrix(read.csv("../data/ex3data1.csv")))
 initial_theta <- rep(0, times = ncol(ex3data1) - 1)
 ```
 
 ##  Visualizing the data
+
+The script to visualize the greyscale digits was included in the resources and not actually a part of the assignment. I skipped it for now, but may revisit in the future. I should be able to modify part of exercise 7 to print the handwritten digits.
 
 ## Vectorizing Logistic Regression
 
@@ -44,10 +46,12 @@ read_chunk("../ex2/ex2_chunks.R")
 ```{r h}
 ```
 
-```{r costFunction}
+```{r cost-function}
 ```
 
 ## One-vs-all Classification 
+
+For one-vs-all classification, we just loop through each of the K classes and run logistic regression like we did in the previous exercise
 
 ```{r learn-thetas, cache=TRUE}
 thetas <- data.frame()
@@ -65,6 +69,8 @@ for(i in 1:10){
 
 ### One-vs-all Prediction
 
+The predicted class is just the class with the highest assigned probability
+
 ```{r eval-pred, cache=TRUE}
 ex3pred1 <- apply(ex3data1, 1, FUN = function(x){
     which.max(as.vector(apply(thetas, 1, FUN = function(y){
@@ -73,12 +79,13 @@ ex3pred1 <- apply(ex3data1, 1, FUN = function(x){
 })
 
 sum(ex3data1[, 402] == ex3pred1) / nrow(ex3data1)
-# This is a higher than the Matlab script
 ```
+
+This is higher than the expected accuracy, although I'm not sure why.
 
 # Neural Networks
 
-```{r}
+```{r nn}
 
 Theta1 <- as.matrix(read.csv("../data/ex3weights_Theta1.csv"))
 Theta2 <- as.matrix(read.csv("../data/ex3weights_Theta2.csv"))
