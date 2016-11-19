@@ -141,7 +141,8 @@ $(document).ready(function () {
 </div>
 
 <pre class="r"><code>require(knitr)
-require(ggplot2)</code></pre>
+require(ggplot2)
+read_chunk(&quot;../ex2/ex2_chunks.R&quot;)</code></pre>
 <div id="multi-class-classification" class="section level1">
 <h1><span class="header-section-number">1</span> Multi-class Classification</h1>
 <div id="dataset" class="section level2">
@@ -157,14 +158,13 @@ initial_theta &lt;- rep(0, times = ncol(ex3data1) - 1)</code></pre>
 <h2><span class="header-section-number">1.3</span> Vectorizing Logistic Regression</h2>
 <div id="vectorizing-the-cost-function" class="section level3">
 <h3><span class="header-section-number">1.3.1</span> Vectorizing the cost function</h3>
-<p>I already implemented a vectorized vesion for exercise 2. I make use of <code>ex2_chunks.R</code> which contains all of the functions written forthe previous exercise.</p>
+<p>I already implemented a vectorized vesion for exercise 2. I make use of <code>ex2_chunks.R</code> which contains all of the functions written for the previous exercise.</p>
 </div>
 <div id="vectorizing-the-gradient" class="section level3">
 <h3><span class="header-section-number">1.3.2</span> Vectorizing the gradient</h3>
 </div>
 <div id="vectorizing-regularized-logistic-regression" class="section level3">
 <h3><span class="header-section-number">1.3.3</span> Vectorizing regularized logistic regression</h3>
-<pre class="r"><code>read_chunk(&quot;../ex2/ex2_chunks.R&quot;)</code></pre>
 <pre class="r"><code>sig &lt;- function(x){1 / (1 + exp(-x))}</code></pre>
 <pre class="r"><code>h &lt;- function(theta, x){
     # matrix multiplication is pairwise multiplication, then summed
@@ -188,7 +188,7 @@ initial_theta &lt;- rep(0, times = ncol(ex3data1) - 1)</code></pre>
 <div id="one-vs-all-classification" class="section level2">
 <h2><span class="header-section-number">1.4</span> One-vs-all Classification</h2>
 <p>For one-vs-all classification, we just loop through each of the K classes and run logistic regression like we did in the previous exercise</p>
-<pre class="r"><code>thetas &lt;- data.frame()
+<pre class="r"><code>thetas &lt;- matrix()
 
 for(i in 1:10){
     Mi &lt;- cbind(ex3data1[, 1:401], ex3data1[, 402] == i)
@@ -198,6 +198,35 @@ for(i in 1:10){
                        method = &quot;BFGS&quot;, control = list(maxit = 400))
     thetas &lt;- rbind(thetas, thetai$par)
 }</code></pre>
+<pre><code>## Warning in rbind(thetas, thetai$par): number of columns of result is not a
+## multiple of vector length (arg 2)
+
+## Warning in rbind(thetas, thetai$par): number of columns of result is not a
+## multiple of vector length (arg 2)
+
+## Warning in rbind(thetas, thetai$par): number of columns of result is not a
+## multiple of vector length (arg 2)
+
+## Warning in rbind(thetas, thetai$par): number of columns of result is not a
+## multiple of vector length (arg 2)
+
+## Warning in rbind(thetas, thetai$par): number of columns of result is not a
+## multiple of vector length (arg 2)
+
+## Warning in rbind(thetas, thetai$par): number of columns of result is not a
+## multiple of vector length (arg 2)
+
+## Warning in rbind(thetas, thetai$par): number of columns of result is not a
+## multiple of vector length (arg 2)
+
+## Warning in rbind(thetas, thetai$par): number of columns of result is not a
+## multiple of vector length (arg 2)
+
+## Warning in rbind(thetas, thetai$par): number of columns of result is not a
+## multiple of vector length (arg 2)
+
+## Warning in rbind(thetas, thetai$par): number of columns of result is not a
+## multiple of vector length (arg 2)</code></pre>
 <div id="one-vs-all-prediction" class="section level3">
 <h3><span class="header-section-number">1.4.1</span> One-vs-all Prediction</h3>
 <p>The predicted class is just the class with the highest assigned probability</p>
@@ -209,12 +238,13 @@ for(i in 1:10){
 
 sum(ex3data1[, 402] == ex3pred1) / nrow(ex3data1)</code></pre>
 <pre><code>## [1] 0.9698</code></pre>
-<p>This is higher than the expected accuracy, although I’m not sure why.</p>
+<p>This is higher than the expected accuracy of 94.9%, although I’m not sure why.</p>
 </div>
 </div>
 </div>
 <div id="neural-networks" class="section level1">
 <h1><span class="header-section-number">2</span> Neural Networks</h1>
+<p>This is just a quick, non-generalized implementation of forward propagation. A more generalized version is implemented in the next exercise</p>
 <pre class="r"><code>Theta1 &lt;- as.matrix(read.csv(&quot;../data/ex3weights_Theta1.csv&quot;))
 Theta2 &lt;- as.matrix(read.csv(&quot;../data/ex3weights_Theta2.csv&quot;))
 
@@ -228,6 +258,7 @@ a3 &lt;- sig(z3)
 ex3pred2 &lt;- apply(a3, 2, which.max)
 sum(ex3data1[, 402] == ex3pred2) / nrow(ex3data1)</code></pre>
 <pre><code>## [1] 0.9752</code></pre>
+<p>The expected accuracy is 97.5%.</p>
 </div>
 
 

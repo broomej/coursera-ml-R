@@ -11,6 +11,7 @@ output:
 ```{r dependencies, message=FALSE}
 require(knitr)
 require(ggplot2)
+read_chunk("../ex2/ex2_chunks.R")
 ```
 
 # Multi-class Classification
@@ -30,15 +31,11 @@ The script to visualize the greyscale digits was included in the resources and n
 
 ### Vectorizing the cost function
 
-I already implemented a vectorized vesion for exercise 2. I make use of `ex2_chunks.R` which contains all of the functions written forthe previous exercise.
+I already implemented a vectorized vesion for exercise 2. I make use of `ex2_chunks.R` which contains all of the functions written for the previous exercise.
 
 ### Vectorizing the gradient
 
 ### Vectorizing regularized logistic regression
-
-```{r read_chunks}
-read_chunk("../ex2/ex2_chunks.R")
-```
 
 ```{r sig}
 ```
@@ -53,8 +50,8 @@ read_chunk("../ex2/ex2_chunks.R")
 
 For one-vs-all classification, we just loop through each of the K classes and run logistic regression like we did in the previous exercise
 
-```{r learn-thetas, cache=TRUE}
-thetas <- data.frame()
+```{r learn-thetas, cache=TRUE, message=FALSE}
+thetas <- matrix()
 
 for(i in 1:10){
     Mi <- cbind(ex3data1[, 1:401], ex3data1[, 402] == i)
@@ -81,11 +78,13 @@ ex3pred1 <- apply(ex3data1, 1, FUN = function(x){
 sum(ex3data1[, 402] == ex3pred1) / nrow(ex3data1)
 ```
 
-This is higher than the expected accuracy, although I'm not sure why.
+This is higher than the expected accuracy of 94.9%, although I'm not sure why.
 
 # Neural Networks
 
-```{r nn}
+This is just a quick, non-generalized implementation of forward propagation. A more generalized version is implemented in the next exercise
+
+```{r nn, cache=TRUE}
 
 Theta1 <- as.matrix(read.csv("../data/ex3weights_Theta1.csv"))
 Theta2 <- as.matrix(read.csv("../data/ex3weights_Theta2.csv"))
@@ -99,7 +98,6 @@ a3 <- sig(z3)
 
 ex3pred2 <- apply(a3, 2, which.max)
 sum(ex3data1[, 402] == ex3pred2) / nrow(ex3data1)
-
 ```
 
 The expected accuracy is 97.5%.
