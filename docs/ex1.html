@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jai Broome" />
+
+
+<title>Exercise 1</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="site_libs/highlight/default.css"
+      type="text/css" />
+<script src="site_libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">coursera-ml-R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown-header">Home</li>
+<li class="dropdown-header">About</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Exercise 1</h1>
+<h4 class="author"><em>Jai Broome</em></h4>
+<h4 class="date"><em>19 November, 2016</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#simple-octavematlab-function"><span class="toc-section-number">1</span> Simple Octave/MATLAB function</a><ul>
+<li><a href="#submitting-solutions"><span class="toc-section-number">1.1</span> Submitting Solutions</a></li>
+</ul></li>
+<li><a href="#linear-regression-with-one-variable"><span class="toc-section-number">2</span> Linear regression with one variable</a><ul>
+<li><a href="#plotting-the-data"><span class="toc-section-number">2.1</span> Plotting the Data</a></li>
+<li><a href="#gradient-descent"><span class="toc-section-number">2.2</span> Gradient Descent</a></li>
+<li><a href="#debugging"><span class="toc-section-number">2.3</span> Debugging</a></li>
+<li><a href="#visualizing-jtheta"><span class="toc-section-number">2.4</span> Visualizing <span class="math inline">\(J(\theta)\)</span></a></li>
+</ul></li>
+<li><a href="#optional-exercises"><span class="toc-section-number">3</span> Optional exercises</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>require(ggplot2)
+require(dplyr)
+require(knitr)</code></pre>
+<div id="simple-octavematlab-function" class="section level1">
+<h1><span class="header-section-number">1</span> Simple Octave/MATLAB function</h1>
+<p>I’ll skip over this since I figure anyone wanting to follow along is already familiar with R</p>
+<div id="submitting-solutions" class="section level2">
+<h2><span class="header-section-number">1.1</span> Submitting Solutions</h2>
+<p>You won’t be able to submit this for credit, but hopefully you still find this useful</p>
+</div>
+</div>
+<div id="linear-regression-with-one-variable" class="section level1">
+<h1><span class="header-section-number">2</span> Linear regression with one variable</h1>
+<p>Here I read in the data, split it into <code>X</code> and <code>y</code>, and generate starting values for <code>theta</code></p>
+<pre class="r"><code>q1data &lt;- read.table(&quot;data/ex1data1.txt&quot;, 
+                     sep = &quot;,&quot;, 
+                     col.names = c(&quot;population&quot;, &quot;profit&quot;))
+q1data$ones &lt;- 1
+q1data &lt;- q1data %&gt;% select(ones, population, profit)
+X &lt;- select(q1data, -profit)
+y &lt;- q1data$profit
+theta &lt;- rep(0, times = 2)</code></pre>
+<div id="plotting-the-data" class="section level2">
+<h2><span class="header-section-number">2.1</span> Plotting the Data</h2>
+<pre class="r"><code>g1 &lt;- ggplot(q1data, aes(x = population, y = profit)) +
+    geom_point(shape = 4, color = &quot;red&quot;, size = 3) +
+    xlab(&quot;Population of City in 10,000s&quot;) +
+    ylab(&quot;Profit in $10,000s&quot;)
+g1</code></pre>
+<p><img src="ex1_files/figure-html/viz-exploration-1.png" width="672" /></p>
+</div>
+<div id="gradient-descent" class="section level2">
+<h2><span class="header-section-number">2.2</span> Gradient Descent</h2>
+<pre class="r"><code>iterations &lt;- 1500
+alpha &lt;- 0.01</code></pre>
+<p>Functions are defined in a separate script so they can be accessed for other assignments. See <code>?knitr::read_chunk</code></p>
+<pre class="r"><code>read_chunk(&quot;ex1/ex1_chunks.R&quot;)</code></pre>
+<pre class="r"><code>computeCost &lt;- function(X, y, theta, lambda = 0){
+    if(is.null(dim(X))){
+        X &lt;- t(data.frame(X))
+    }
+
+    m &lt;- nrow(X)
+    pred &lt;- theta %*% t(X)
+    sqError &lt;- (pred - y) ^ 2
+    cost &lt;- (1 / (2 * m)) * sum(sqError)
+    reg &lt;- (lambda / (2 * m)) * sum(theta[-1]^2)
+    J &lt;- cost + reg
+
+    gradient &lt;- (1 / m) * sum((pred - y) * X[, 1]) # first element unregularized
+    for(j in 2:length(theta)){
+        gradient &lt;- c(gradient, ((1 / m) * sum((pred - y) * X[, j]) + lambda * theta[j] / m))
+    }
+    return(list(J=J, gradient=gradient))
+}</code></pre>
+<pre class="r"><code>gradStep &lt;- function(thetaj, alpha, gradj){
+    thetaj - alpha * gradj
+}</code></pre>
+<p>Note that in the loop, <code>thetas</code> get stored in a temporary variable for simultaneous updating.</p>
+<pre class="r"><code>gradientDescent &lt;- function(X, y, theta, alpha, iterations, lambda = 0){
+    if(length(theta) != ncol(X)){stop(&quot;theta and X are nonconformable&quot;)}
+    J_history &lt;- data.frame()
+    for (iteration in 1:iterations){
+
+        a &lt;- computeCost(X = X, y = y, theta = theta, lambda = lambda)
+        J &lt;- a$J
+        gradient &lt;- a$gradient
+        J_history &lt;- rbind(J_history, c(J, iteration - 1, theta))
+
+        thetaTemp &lt;- vector()
+        for(j in 1:length(theta)){
+            thetaTemp &lt;- c(thetaTemp, gradStep(theta[j], alpha, gradient[j]))
+        }
+        theta &lt;- thetaTemp
+    }
+    # for final iteration
+    J &lt;- computeCost(X = X, y = y, theta = theta, lambda = lambda)$J
+    J_history &lt;- rbind(J_history, c(J, iteration, theta))
+    thetanames &lt;- rep(&quot;theta&quot;, times = length(theta) - 1)
+    for(i in length(thetanames)){thetanames[i] &lt;- paste(&quot;theta&quot;, i, sep = &quot;&quot;)}
+    colnames(J_history) &lt;- c(&quot;loss&quot;, &quot;iterations&quot;, &quot;theta0&quot;, thetanames)
+    return(J_history)
+}</code></pre>
+<pre class="r"><code>computeCost(X, y, theta)</code></pre>
+<pre><code>## $J
+## [1] 32.07273
+## 
+## $gradient
+## [1]  -5.839135 -65.328850</code></pre>
+<p>Should be <code>32.07</code></p>
+</div>
+<div id="debugging" class="section level2">
+<h2><span class="header-section-number">2.3</span> Debugging</h2>
+<p>Pay particular attention to indexing in these exercizes, because unlike Matlab, R <em>does</em> start indexing at 1</p>
+<pre class="r"><code>jhist &lt;- gradientDescent(X, y, theta, alpha, iterations)
+jhist &lt;- jhist[2:(nrow(jhist) - 1),] #makes graph more interpretible </code></pre>
+<pre class="r"><code>ggplot(jhist, aes(x = iterations, y = loss)) + geom_line()</code></pre>
+<p><img src="ex1_files/figure-html/viz-results-1.png" width="672" /></p>
+<pre class="r"><code>g1 + geom_abline(slope = tail(jhist$theta1, n = 1), intercept = tail(jhist$theta0, n = 1))</code></pre>
+<p><img src="ex1_files/figure-html/viz-results-2.png" width="672" /></p>
+</div>
+<div id="visualizing-jtheta" class="section level2">
+<h2><span class="header-section-number">2.4</span> Visualizing <span class="math inline">\(J(\theta)\)</span></h2>
+<p>I skipped over this section since the code is already written in Matlab by the course instructors. See the assignment page for the images that show how different values of the thetas yield different costs</p>
+</div>
+</div>
+<div id="optional-exercises" class="section level1">
+<h1><span class="header-section-number">3</span> Optional exercises</h1>
+<p>These are still incomplete. I’m planning on returning to these after making it through the main course content</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

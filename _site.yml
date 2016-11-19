@@ -1,0 +1,10 @@
+name: "coursera-ml-R"
+navbar:
+  title: "coursera-ml-R"
+  left:
+    - text: "Home"
+      href: #
+    - text: "About"
+      href: #
+output_dir: "docs"
+exclude: ["data", "*.pdf", "*.R"]
