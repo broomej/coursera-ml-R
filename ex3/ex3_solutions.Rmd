@@ -50,7 +50,7 @@ I already implemented a vectorized vesion for exercise 2. I make use of `ex2_chu
 
 For one-vs-all classification, we just loop through each of the K classes and run logistic regression like we did in the previous exercise
 
-```{r learn-thetas, cache=TRUE, warning=FALSE}
+```{r learn-thetas, cache=TRUE, message=FALSE}
 thetas <- matrix()
 
 for(i in 1:10){
