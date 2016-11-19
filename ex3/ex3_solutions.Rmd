@@ -102,3 +102,4 @@ sum(ex3data1[, 402] == ex3pred2) / nrow(ex3data1)
 
 ```
 
+The expected accuracy is 97.5%.
