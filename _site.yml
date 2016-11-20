@@ -2,9 +2,13 @@ name: "coursera-ml-R"
 navbar:
   title: "coursera-ml-R"
   left:
-    - text: "Home"
-      href: #
-    - text: "About"
-      href: #
+    - text: "Exercise 1"
+      href: ex1.html
+    - text: "Exercise 2"
+      href: ex2.html
+    - text: "Exercise 3"
+      href: ex3.html
+    - text: "Exercise 7"
+      href: ex7.html
 output_dir: "docs"
 exclude: ["data", "*.pdf", "*.R"]

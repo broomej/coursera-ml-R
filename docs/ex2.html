@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jai Broome" />
+
+
+<title>Exercise 2</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="site_libs/highlight/default.css"
+      type="text/css" />
+<script src="site_libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">coursera-ml-R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="ex1.html">Exercise 1</a>
+</li>
+<li>
+  <a href="ex2.html">Exercise 2</a>
+</li>
+<li>
+  <a href="ex3.html">Exercise 3</a>
+</li>
+<li>
+  <a href="ex7.html">Exercise 7</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Exercise 2</h1>
+<h4 class="author"><em>Jai Broome</em></h4>
+<h4 class="date"><em>19 November, 2016</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#logistic-regression"><span class="toc-section-number">1</span> Logistic Regression</a><ul>
+<li><a href="#visualizing-the-data"><span class="toc-section-number">1.1</span> Visualizing the Data</a></li>
+<li><a href="#implementation"><span class="toc-section-number">1.2</span> Implementation</a><ul>
+<li><a href="#sigmoid-function"><span class="toc-section-number">1.2.1</span> Sigmoid function</a></li>
+<li><a href="#cost-function-and-gradient"><span class="toc-section-number">1.2.2</span> Cost function and gradient</a></li>
+<li><a href="#learning-parameters-using-optim"><span class="toc-section-number">1.2.3</span> Learning parameters using <code>optim</code></a></li>
+<li><a href="#evaluating-logistic-regression"><span class="toc-section-number">1.2.4</span> Evaluating Logistic Regression</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#regularized-logistic-regression"><span class="toc-section-number">2</span> Regularized Logistic Regression</a><ul>
+<li><a href="#visualizing-the-data-1"><span class="toc-section-number">2.1</span> Visualizing the data</a></li>
+<li><a href="#feature-mapping"><span class="toc-section-number">2.2</span> Feature mapping</a></li>
+<li><a href="#cost-function-and-gradient-1"><span class="toc-section-number">2.3</span> Cost function and gradient</a><ul>
+<li><a href="#learning-parameters-using-optim-1"><span class="toc-section-number">2.3.1</span> Learning parameters using <code>optim</code></a></li>
+</ul></li>
+<li><a href="#plotting-the-decision-boundary"><span class="toc-section-number">2.4</span> Plotting the decision boundary</a></li>
+<li><a href="#optional-ungraded-exercises"><span class="toc-section-number">2.5</span> Optional (ungraded) exercises</a></li>
+</ul></li>
+</ul>
+</div>
+
+<pre class="r"><code>require(ggplot2)
+require(knitr)</code></pre>
+<pre class="r"><code>read_chunk(&quot;ex2/ex2_chunks.R&quot;)</code></pre>
+<div id="logistic-regression" class="section level1">
+<h1><span class="header-section-number">1</span> Logistic Regression</h1>
+<div id="visualizing-the-data" class="section level2">
+<h2><span class="header-section-number">1.1</span> Visualizing the Data</h2>
+<p>Read in data and initialize theta</p>
+<pre class="r"><code>ex2data1 &lt;- read.table(&quot;data/ex2data1.txt&quot;, sep = &quot;,&quot;)
+ex2data1 &lt;- cbind(1, ex2data1)
+initial_theta &lt;- rep(0, times = 3)</code></pre>
+<pre class="r"><code>g1 &lt;- ggplot(ex2data1, aes(x = V1, y = V2, color = as.factor(V3))) + 
+    geom_point() +
+    labs(x = &quot;Exam 1 Score&quot;,
+         y = &quot;Exam 2 Score&quot;,
+         color = &quot;Legend\n&quot;) +
+    scale_color_manual(labels = c(&quot;Not Admitted&quot;, &quot;Admitted&quot;), values = c(1,2))
+g1 + ggtitle(&quot;Figure 1: Scatter plot of training data&quot;)</code></pre>
+<p><img src="ex2_files/figure-html/vizualize-data-1.png" width="672" /></p>
+</div>
+<div id="implementation" class="section level2">
+<h2><span class="header-section-number">1.2</span> Implementation</h2>
+<div id="sigmoid-function" class="section level3">
+<h3><span class="header-section-number">1.2.1</span> Sigmoid function</h3>
+<pre class="r"><code>sig &lt;- function(x){1 / (1 + exp(-x))}</code></pre>
+</div>
+<div id="cost-function-and-gradient" class="section level3">
+<h3><span class="header-section-number">1.2.2</span> Cost function and gradient</h3>
+<p>Note that <code>costFunction</code> takes a matrix <code>M</code> with the outcome in the last column, and separates it into Xs and Y. Note that I’ve implemented regularization for the first exercise so the function can be reused for the second part of this exercise.</p>
+<pre class="r"><code>costFunction &lt;- function(M, theta, lambda = 0){
+    m &lt;- nrow(M)
+    X &lt;- M[, 1:(ncol(M) - 1)]
+    y &lt;- M[, ncol(M)]
+
+    J &lt;- - (1 / m) * crossprod(c(y, 1 - y),
+                               c(log(sig(X %*% theta)), log(1 - sig(X%*% theta)))) +
+        (lambda / (2 * m)) * sum(theta ^ 2)
+
+    grad &lt;- (1 / m) * crossprod(X, sig(X %*% theta) - y) +
+        (lambda / m) * theta
+    list(J = as.vector(J), grad = as.vector(grad))
+}</code></pre>
+</div>
+<div id="learning-parameters-using-optim" class="section level3">
+<h3><span class="header-section-number">1.2.3</span> Learning parameters using <code>optim</code></h3>
+<p>I used R’s <code>optim</code> as an alternative to Matlab’s <code>fminunc</code>. <code>costFunction</code> returns both the cost and the gradient.</p>
+<pre class="r"><code>ex2data1 &lt;- as.matrix(ex2data1)
+newTheta &lt;- optim(par = initial_theta,
+      fn = function(x){costFunction(ex2data1, x)$J},
+      gr = function(x){costFunction(ex2data1, x)$grad},
+      method = &quot;BFGS&quot;, control = list(maxit = 400))</code></pre>
+</div>
+<div id="evaluating-logistic-regression" class="section level3">
+<h3><span class="header-section-number">1.2.4</span> Evaluating Logistic Regression</h3>
+<pre class="r"><code>testScores &lt;- c(45, 85)</code></pre>
+<p>With test scores of 45, 85, we should see an admission probability of 0.776.</p>
+<pre class="r"><code>h &lt;- function(theta, x){
+    # matrix multiplication is pairwise multiplication, then summed
+    sig(sum(theta * x))
+}</code></pre>
+<pre class="r"><code>h(newTheta$par, c(1, testScores)) # Include the x0 term</code></pre>
+<pre><code>## [1] 0.7756949</code></pre>
+<p>While the in-sample error isn’t reported in the excercise sheet, the above test makes me reasonably sure that this is working correctly. I’ll update this if I hear from anyone who has taken this course for credit.</p>
+<pre class="r"><code>predLogReg &lt;- function(M, theta){
+    apply(M[, seq_along(theta)], 1, function(x){h(theta, x)})
+}</code></pre>
+<pre class="r"><code>ex2data1Pred &lt;- predLogReg(ex2data1, newTheta$par)
+sum(ex2data1[, 4]==round(ex2data1Pred, 0)) / nrow(ex2data1)</code></pre>
+<pre><code>## [1] 0.89</code></pre>
+<p>By eyeballing the plot in the exercise sheet, we can see the decision boundary lies about on (50, 75) and (75, 50). By using those points as initial parameters, I find two points on the decision boundary using <code>optim</code>.</p>
+<pre class="r"><code>findDecisionBoundary &lt;- function(pts = matrix(c(50,75,75,50), 2, 2), theta){
+    newYs &lt;- apply(pts, 1, function(x){
+        optim(par = x[2],
+              fn = function(y){
+                    (h(c(1, x[1], y), theta) - 0.5) ^ 2
+                  # Squared so min wil be at the decision boundary
+                  },
+              method = &quot;BFGS&quot;, control = list(maxit = 400))
+    })
+    newYs &lt;- do.call(rbind, newYs)
+    newYs &lt;- unlist(newYs[1:2])
+    data.frame(x = pts[, 1], oldY = pts[, 2], newY = newYs)
+}</code></pre>
+<pre class="r"><code>decPoints &lt;- findDecisionBoundary(theta = newTheta$par)</code></pre>
+<p>The prediction should be 0.5 for both points (definitionally), so we can see if we made a mistake</p>
+<pre class="r"><code>apply(decPoints[, c(1, 3)], 1, function(x){h(c(1, x), newTheta$par)})</code></pre>
+<pre><code>## [1] 0.5 0.5</code></pre>
+<pre class="r"><code>dec.lm &lt;- lm(x ~ newY, decPoints)
+g2 &lt;- g1 +
+    geom_abline(slope = dec.lm$coefficients[[2]], intercept = dec.lm$coefficients[[1]])
+g2 + ggtitle(&quot;Figure 2: Training data with decision boundary&quot;)</code></pre>
+<p><img src="ex2_files/figure-html/plot-dec-boundary-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+<div id="regularized-logistic-regression" class="section level1">
+<h1><span class="header-section-number">2</span> Regularized Logistic Regression</h1>
+<div id="visualizing-the-data-1" class="section level2">
+<h2><span class="header-section-number">2.1</span> Visualizing the data</h2>
+<pre class="r"><code>ex2data2 &lt;- read.table(&quot;data/ex2data2.txt&quot;, sep = &quot;,&quot;)
+g3 &lt;- ggplot(ex2data2, aes(V1, V2)) + 
+    geom_point(aes(color = as.factor(V3))) +
+    labs(x = &quot;Microchip Test 1&quot;,
+         y = &quot;Microchip Test 2&quot;,
+         color = &quot;Legend\n&quot;) +
+    scale_color_manual(labels = c(&quot;Fail&quot;, &quot;Pass&quot;), values = c(1, 2))
+g3 + ggtitle(&quot;Figure 3: Plot of training data&quot;)</code></pre>
+<p><img src="ex2_files/figure-html/plot-ex2data2-1.png" width="672" /></p>
+</div>
+<div id="feature-mapping" class="section level2">
+<h2><span class="header-section-number">2.2</span> Feature mapping</h2>
+<pre class="r"><code>y &lt;- ex2data2$V3
+
+x1s &lt;- ex2data2[, 1]
+x2s &lt;- ex2data2[, 2]
+
+for(i in 2:6){
+    x1s &lt;- cbind(x1s, ex2data2[,1] ^ i)
+    }
+x1s &lt;- cbind(1, x1s)
+
+for(i in 2:6){
+    x2s &lt;- cbind(x2s, ex2data2[,1] ^ i)
+}
+x2s &lt;- cbind(1, x2s)
+
+allxs &lt;- vector()
+
+for(i in 1:ncol(x2s)){
+    allxs &lt;- cbind(allxs, x1s[, 1:(8-i)] * x2s[,i])
+}
+
+ex2data2.full &lt;- cbind(allxs, y)</code></pre>
+</div>
+<div id="cost-function-and-gradient-1" class="section level2">
+<h2><span class="header-section-number">2.3</span> Cost function and gradient</h2>
+<p>From the exercise sheet, we should expect an initial cost of about 0.693.</p>
+<pre class="r"><code>initial_theta &lt;- rep(0, times = 28)
+costFunction(ex2data2.full, initial_theta)$J</code></pre>
+<pre><code>## [1] 0.6931472</code></pre>
+<div id="learning-parameters-using-optim-1" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Learning parameters using <code>optim</code></h3>
+<pre class="r"><code>newTheta2 &lt;- optim(par = initial_theta,
+      fn = function(x){costFunction(ex2data2.full, x)$J},
+      gr = function(x){costFunction(ex2data2.full, x)$grad},
+      method = &quot;BFGS&quot;, control = list(maxit = 1000))</code></pre>
+<p>Unfortunately, there isn’t a numerical check I can do to make sure this is correct.</p>
+</div>
+</div>
+<div id="plotting-the-decision-boundary" class="section level2">
+<h2><span class="header-section-number">2.4</span> Plotting the decision boundary</h2>
+</div>
+<div id="optional-ungraded-exercises" class="section level2">
+<h2><span class="header-section-number">2.5</span> Optional (ungraded) exercises</h2>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

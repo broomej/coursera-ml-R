@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jai Broome" />
+
+
+<title>Exercise 3</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="site_libs/highlight/default.css"
+      type="text/css" />
+<script src="site_libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">coursera-ml-R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="ex1.html">Exercise 1</a>
+</li>
+<li>
+  <a href="ex2.html">Exercise 2</a>
+</li>
+<li>
+  <a href="ex3.html">Exercise 3</a>
+</li>
+<li>
+  <a href="ex7.html">Exercise 7</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Exercise 3</h1>
+<h4 class="author"><em>Jai Broome</em></h4>
+<h4 class="date"><em>19 November, 2016</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#multi-class-classification"><span class="toc-section-number">1</span> Multi-class Classification</a><ul>
+<li><a href="#dataset"><span class="toc-section-number">1.1</span> Dataset</a></li>
+<li><a href="#visualizing-the-data"><span class="toc-section-number">1.2</span> Visualizing the data</a></li>
+<li><a href="#vectorizing-logistic-regression"><span class="toc-section-number">1.3</span> Vectorizing Logistic Regression</a><ul>
+<li><a href="#vectorizing-the-cost-function"><span class="toc-section-number">1.3.1</span> Vectorizing the cost function</a></li>
+<li><a href="#vectorizing-the-gradient"><span class="toc-section-number">1.3.2</span> Vectorizing the gradient</a></li>
+<li><a href="#vectorizing-regularized-logistic-regression"><span class="toc-section-number">1.3.3</span> Vectorizing regularized logistic regression</a></li>
+</ul></li>
+<li><a href="#one-vs-all-classification"><span class="toc-section-number">1.4</span> One-vs-all Classification</a><ul>
+<li><a href="#one-vs-all-prediction"><span class="toc-section-number">1.4.1</span> One-vs-all Prediction</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#neural-networks"><span class="toc-section-number">2</span> Neural Networks</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>require(knitr)
+require(ggplot2)
+read_chunk(&quot;ex2/ex2_chunks.R&quot;)</code></pre>
+<div id="multi-class-classification" class="section level1">
+<h1><span class="header-section-number">1</span> Multi-class Classification</h1>
+<div id="dataset" class="section level2">
+<h2><span class="header-section-number">1.1</span> Dataset</h2>
+<pre class="r"><code>ex3data1 &lt;- cbind(1, as.matrix(read.csv(&quot;data/ex3data1.csv&quot;)))
+initial_theta &lt;- rep(0, times = ncol(ex3data1) - 1)</code></pre>
+</div>
+<div id="visualizing-the-data" class="section level2">
+<h2><span class="header-section-number">1.2</span> Visualizing the data</h2>
+<p>The script to visualize the greyscale digits was included in the resources and not actually a part of the assignment. I skipped it for now, but may revisit in the future. I should be able to modify part of exercise 7 to print the handwritten digits.</p>
+</div>
+<div id="vectorizing-logistic-regression" class="section level2">
+<h2><span class="header-section-number">1.3</span> Vectorizing Logistic Regression</h2>
+<div id="vectorizing-the-cost-function" class="section level3">
+<h3><span class="header-section-number">1.3.1</span> Vectorizing the cost function</h3>
+<p>I already implemented a vectorized vesion for exercise 2. I make use of <code>ex2_chunks.R</code> which contains all of the functions written for the previous exercise.</p>
+</div>
+<div id="vectorizing-the-gradient" class="section level3">
+<h3><span class="header-section-number">1.3.2</span> Vectorizing the gradient</h3>
+</div>
+<div id="vectorizing-regularized-logistic-regression" class="section level3">
+<h3><span class="header-section-number">1.3.3</span> Vectorizing regularized logistic regression</h3>
+<pre class="r"><code>sig &lt;- function(x){1 / (1 + exp(-x))}</code></pre>
+<pre class="r"><code>h &lt;- function(theta, x){
+    # matrix multiplication is pairwise multiplication, then summed
+    sig(sum(theta * x))
+}</code></pre>
+<pre class="r"><code>costFunction &lt;- function(M, theta, lambda = 0){
+    m &lt;- nrow(M)
+    X &lt;- M[, 1:(ncol(M) - 1)]
+    y &lt;- M[, ncol(M)]
+
+    J &lt;- - (1 / m) * crossprod(c(y, 1 - y),
+                               c(log(sig(X %*% theta)), log(1 - sig(X%*% theta)))) +
+        (lambda / (2 * m)) * sum(theta ^ 2)
+
+    grad &lt;- (1 / m) * crossprod(X, sig(X %*% theta) - y) +
+        (lambda / m) * theta
+    list(J = as.vector(J), grad = as.vector(grad))
+}</code></pre>
+</div>
+</div>
+<div id="one-vs-all-classification" class="section level2">
+<h2><span class="header-section-number">1.4</span> One-vs-all Classification</h2>
+<p>For one-vs-all classification, we just loop through each of the K classes and run logistic regression like we did in the previous exercise</p>
+<pre class="r"><code>thetas &lt;- matrix()
+
+for(i in 1:10){
+    Mi &lt;- cbind(ex3data1[, 1:401], ex3data1[, 402] == i)
+    thetai &lt;- optim(par = initial_theta,
+                       fn = function(x){costFunction(Mi, x)$J},
+                       gr = function(x){costFunction(Mi, x)$grad},
+                       method = &quot;BFGS&quot;, control = list(maxit = 400))
+    thetas &lt;- rbind(thetas, thetai$par)
+}</code></pre>
+<div id="one-vs-all-prediction" class="section level3">
+<h3><span class="header-section-number">1.4.1</span> One-vs-all Prediction</h3>
+<p>The predicted class is just the class with the highest assigned probability</p>
+<pre class="r"><code>ex3pred1 &lt;- apply(ex3data1, 1, FUN = function(x){
+    which.max(as.vector(apply(thetas, 1, FUN = function(y){
+        h(y, x[1:401])
+    })))
+})
+
+sum(ex3data1[, 402] == ex3pred1) / nrow(ex3data1)</code></pre>
+<pre><code>## [1] 0.1</code></pre>
+<p>This is higher than the expected accuracy of 94.9%, although I’m not sure why.</p>
+</div>
+</div>
+</div>
+<div id="neural-networks" class="section level1">
+<h1><span class="header-section-number">2</span> Neural Networks</h1>
+<p>This is just a quick, non-generalized implementation of forward propagation. A more generalized version is implemented in the next exercise</p>
+<pre class="r"><code>Theta1 &lt;- as.matrix(read.csv(&quot;data/ex3weights_Theta1.csv&quot;))
+Theta2 &lt;- as.matrix(read.csv(&quot;data/ex3weights_Theta2.csv&quot;))
+
+z2 &lt;- Theta1 %*% t(ex3data1[, 1:401])
+a2 &lt;- sig(z2)
+a2 &lt;- rbind(1, a2)
+
+z3 &lt;- Theta2 %*% a2
+a3 &lt;- sig(z3)
+
+ex3pred2 &lt;- apply(a3, 2, which.max)
+sum(ex3data1[, 402] == ex3pred2) / nrow(ex3data1)</code></pre>
+<pre><code>## [1] 0.9752</code></pre>
+<p>The expected accuracy is 97.5%.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

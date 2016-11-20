@@ -5,4 +5,6 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
 
-## Placeholder
+This is based on Andrew Ng's popular machine learning class on Coursera. I didn't see anyone documenting the solutions in R, so I wanted to share mine. Hopefully some people will find this resource helpful.
+
+Note that you won't be able to take this class for credit if you use R instead. Assignments are submitted via a Matlab script that references other Matlab files, which I've obviously not completed.
