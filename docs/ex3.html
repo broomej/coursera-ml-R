@@ -204,7 +204,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Exercise 3</h1>
 <h4 class="author"><em>Jai Broome</em></h4>
-<h4 class="date"><em>19 November, 2016</em></h4>
+<h4 class="date"><em>20 November, 2016</em></h4>
 
 </div>
 
@@ -274,7 +274,7 @@ initial_theta &lt;- rep(0, times = ncol(ex3data1) - 1)</code></pre>
 <div id="one-vs-all-classification" class="section level2">
 <h2><span class="header-section-number">1.4</span> One-vs-all Classification</h2>
 <p>For one-vs-all classification, we just loop through each of the K classes and run logistic regression like we did in the previous exercise</p>
-<pre class="r"><code>thetas &lt;- matrix()
+<pre class="r"><code>thetas &lt;- data.frame()
 
 for(i in 1:10){
     Mi &lt;- cbind(ex3data1[, 1:401], ex3data1[, 402] == i)
@@ -294,7 +294,7 @@ for(i in 1:10){
 })
 
 sum(ex3data1[, 402] == ex3pred1) / nrow(ex3data1)</code></pre>
-<pre><code>## [1] 0.1</code></pre>
+<pre><code>## [1] 0.9698</code></pre>
 <p>This is higher than the expected accuracy of 94.9%, although I’m not sure why.</p>
 </div>
 </div>
