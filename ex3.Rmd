@@ -50,8 +50,8 @@ I already implemented a vectorized vesion for exercise 2. I make use of `ex2_chu
 
 For one-vs-all classification, we just loop through each of the K classes and run logistic regression like we did in the previous exercise
 
-```{r learn-thetas, cache=TRUE, message=FALSE, warning=FALSE}
-thetas <- matrix()
+```{r learn-thetas, cache=TRUE}
+thetas <- data.frame()
 
 for(i in 1:10){
     Mi <- cbind(ex3data1[, 1:401], ex3data1[, 402] == i)
