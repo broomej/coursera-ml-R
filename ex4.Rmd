@@ -1,0 +1,116 @@
+---
+title: "Exercise 4"
+author: "Jai Broome"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    html_document:
+        toc: true
+        number_sections: true
+---
+
+```{r dependencies, message=FALSE}
+require(knitr)
+require(dplyr)
+read_chunk("ex2/ex2_chunks.R")
+read_chunk("ex4/ex4_chunks.R")
+```
+
+```{r read-data}
+set.seed(1234)
+ex3data1 <- as.matrix(read.csv("data/ex3data1.csv"))
+colnames(ex3data1) <- paste("X", seq(ncol(ex3data1)), sep = "")
+colnames(ex3data1)[ncol(ex3data1)] <- "Y"
+ex3data1 <- cbind(X0 = 1, ex3data1)
+```
+
+```{r sig}
+```
+
+```{r y-matrix}
+newy <- vector()
+for(i in 1:10){
+  newy <- cbind(newy, ex3data1[, "Y"] == i)
+}
+```
+
+This is largely based on (kaleko's python script on Github)[https://github.com/kaleko/CourseraML/blob/master/ex4/ex4.ipynb].
+
+I read in the weights and save them as a list because this mimics what's returned with `readMat`. Since I already processed them and saved them as separate CSVs, this is an odd way to do it, but it would require going back and modifying some of the structure for the following computations. I may tidy this up in the future
+
+```{r}
+ex3weights <- list(Theta1 = as.matrix(read.csv("data/ex3weights_Theta1.csv")),
+                   Theta2 = as.matrix(read.csv("data/ex3weights_Theta2.csv")))
+```
+
+```{r params}
+input_layer_size <- 400
+hidden_layer_size <- 25
+output_layer_size <- 10
+n_training_samples <- 5000
+```
+
+`unlist()` does what `flattenParams` does in kaleko's Python script
+
+```{r reshape-params}
+```
+
+```{r reshape-x}
+```
+
+```{r compute-cost}
+```
+
+
+```{r propagate-forward}
+```
+
+```{r test-compute-cost}
+computeCost(unlist(ex3weights), unlist(ex3data1[, 1:401]), newy)
+computeCost(unlist(ex3weights), unlist(ex3data1[, 1:401]), newy, 1)
+```
+
+```{r sigmoid-gradient}
+```
+
+```{r gen-rand-thetas}
+```
+
+```{r back-propagate}
+```
+
+```{r run-nn}
+#Actually compute D matrices for the Thetas provided
+flattenedD1D2 <- backPropagate(unlist(ex3weights),
+                              unlist(ex3data1[, 1:401]),
+                              newy,#ex3data1[, ncol(ex3data1)],
+                              mylambda = 0)
+
+deltas <- reshapeParams(flattenedD1D2)
+```
+
+```{r check-gradient}
+```
+
+```{r test-check-gradient}
+checkGradient(ex3weights, deltas, ex3data1[, 1:401], newy)
+```
+
+```{r train-nn}
+```
+
+```{r train-model, cache=TRUE}
+start_time <- Sys.time()
+learned_Thetas <- trainNN()
+print(Sys.time() - start_time)
+```
+
+```{r nn-pred}
+```
+
+```{r test-pred}
+pred <- NNpred(ex3data1[, 1:401], 
+               reshapeParams(learned_Thetas$par), 
+               ex3data1[, ncol(ex3data1)])
+sum(pred== ex3data1[, ncol(ex3data1)]) / length(pred)
+```
+
