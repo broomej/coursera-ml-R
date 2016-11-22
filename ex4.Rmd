@@ -1,0 +1,164 @@
+---
+title: "Exercise 4"
+author: "Jai Broome"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    html_document:
+        toc: true
+        number_sections: true
+---
+
+```{r dependencies, message=FALSE}
+require(knitr)
+require(dplyr)
+read_chunk("ex2/ex2_chunks.R")
+read_chunk("ex4/ex4_chunks.R")
+```
+
+# Neural Networks
+
+```{r read-data}
+set.seed(12345)
+ex3data1 <- as.matrix(read.csv("data/ex3data1.csv"))
+colnames(ex3data1) <- paste("X", seq(ncol(ex3data1)), sep = "")
+colnames(ex3data1)[ncol(ex3data1)] <- "Y"
+ex3data1 <- cbind(X0 = 1, ex3data1)
+```
+
+```{r sig}
+```
+
+```{r y-matrix}
+newy <- vector()
+for(i in 1:10){
+  newy <- cbind(newy, ex3data1[, "Y"] == i)
+}
+```
+
+## Visualizing the data
+
+This is the same visualization as in Exercise 3
+
+## Model representation
+
+This is largely based on [kaleko's python script on Github](https://github.com/kaleko/CourseraML/blob/master/ex4/ex4.ipynb).
+
+I read in the weights and save them as a list because this mimics what's returned with `readMat`. Since I already processed them and saved them as separate CSVs, this is an odd way to do it, but it would require going back and modifying some of the structure for the following computations. I may tidy this up in the future
+
+```{r}
+ex3weights <- list(Theta1 = as.matrix(read.csv("data/ex3weights_Theta1.csv")),
+                   Theta2 = as.matrix(read.csv("data/ex3weights_Theta2.csv")))
+```
+
+```{r params}
+input_layer_size <- 400
+hidden_layer_size <- 25
+output_layer_size <- 10
+n_training_samples <- 5000
+```
+
+## Feedforward and cost function
+
+`unlist()` does what `flattenParams` does in kaleko's Python script
+
+```{r reshape-params}
+```
+
+```{r reshape-x}
+```
+
+```{r compute-cost}
+```
+
+
+```{r propagate-forward}
+```
+
+We should expect an initial cost of 0.287629.
+
+```{r test-compute cost}
+computeCost(unlist(ex3weights), unlist(ex3data1[, 1:401]), newy)
+```
+
+## Regularized cost function
+
+With the regularization term, we should have an initial cost of 0.383770. As of 11/21/2016, this is slightly off.
+
+```{r test-compute-cost-reg}
+computeCost(unlist(ex3weights), unlist(ex3data1[, 1:401]), newy, 1)
+```
+
+# Backpropagation
+
+## Sigmoid gradient
+
+```{r sigmoid-gradient}
+```
+
+##  Random initialization
+
+```{r gen-rand-thetas}
+```
+
+## Backpropagation
+
+```{r back-propagate}
+```
+
+```{r run-nn}
+#Actually compute D matrices for the Thetas provided
+flattenedD1D2 <- backPropagate(unlist(ex3weights),
+                              unlist(ex3data1[, 1:401]),
+                              newy,#ex3data1[, ncol(ex3data1)],
+                              mylambda = 0)
+
+deltas <- reshapeParams(flattenedD1D2)
+```
+
+## Gradient checking
+
+```{r check-gradient}
+```
+
+```{r test-check-gradient}
+checkGradient(ex3weights, deltas, ex3data1[, 1:401], newy)
+```
+
+## Regularized Neural Networks
+
+## Learning parameters using `optim`
+
+```{r train-nn}
+```
+
+```{r train-model, cache=TRUE}
+start_time <- Sys.time()
+learned_Thetas <- trainNN()
+print(Sys.time() - start_time)
+```
+
+Clearly not the most efficient implementation of neural networks.
+
+```{r nn-pred}
+```
+
+```{r test-pred}
+pred <- NNpred(ex3data1[, 1:401], 
+               reshapeParams(learned_Thetas$par), 
+               ex3data1[, ncol(ex3data1)])
+sum(pred== ex3data1[, ncol(ex3data1)]) / length(pred)
+```
+
+Unfortunately, there's no way to check the exact solution numerically. From the assignment:
+
+> If your implementation is correct, you should see a reported training accuracy of about 95.3% (this may vary by about 1% due to the random initialization)
+
+It's close, but I suspect the error with how regularization was implemented is causing it to not perform quite as well.
+
+#  Visualizing the hidden layer
+
+Again, `displayData` was already written in the included Matlab files, so I've skipped it here.
+
+## Optional (ungraded) exercise
+
+I may revisit the optional exercizes once I'm finished with the "main" content.

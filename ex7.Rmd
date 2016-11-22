@@ -1,0 +1,271 @@
+---
+title: "Exercise 7"
+author: "Jai Broome"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+    html_document:
+        toc: true
+        number_sections: true
+---
+
+```{r dependencies, message=FALSE}
+require(ggplot2)
+require(knitr)
+library(grid)
+read_chunk("ex7/ex7_chunks.R")
+```
+
+# $K$-means Clustering
+
+## Implementing $K$-means
+
+### Finding closest centroids
+
+```{r read-data2, cache=TRUE}
+ex7data2 <- read.csv("data/ex7data/ex7data2.csv")
+```
+
+```{r explore-data, cache=TRUE}
+g1 <- ggplot(ex7data2, aes(V1, V2)) + geom_point()
+g1
+```
+
+This part is fairly straightforward, but it's broken into parts to make it easier to debug. `minEuDist` takes a coordinate and a vector of centroid coordinates and returns the index of the nearest one.
+
+```{r min-Eu-dist}
+```
+
+```{r test-min-distance}
+initial_centroids <- matrix(c(3, 3, 6, 2, 8, 5), 3, 2, TRUE)
+minEuDist(ex7data2[15,], initial_centroids)
+```
+
+```{r find-closest-centroids}
+```
+
+`findClosestCentroids` applies `minEuDist` over an array.
+
+We should see the output [1 3 2] corresponding to the centroid assignments for the first 3 examples.
+
+```{r test-find-centroids}
+idx <- findClosestCentroids(ex7data2, initial_centroids)
+idx[1:3]
+```
+
+### Computing centroid means
+
+The other part of K-means clustering is updating the value of the centroids. This function takes the array of points, their initial assignment to a centroid, and the positions of the centroids. The data are then subsetted by centroid, and that centroid is moved to the new average value of those points that are assigned to it.
+
+```{r compute-centroids}
+```
+
+```{r test-compute-centroids, cache=TRUE}
+computeCentroids(ex7data2, idx, initial_centroids)
+```
+
+
+## $K$-means on example dataset
+
+`runKMeans` saves the values of the centroids that way we can plot their trajectory.
+
+```{r k-means}
+```
+
+```{r test-k-means, cache=TRUE}
+runKMeans <- kMeans(ex7data2, initial_centroids, 10)
+
+ex7data2 <- cbind(ex7data2, K = as.factor(runKMeans[nrow(runKMeans), 1:300]))
+```
+
+```{r plot-test-k-means, cache=TRUE}
+g2 <- ggplot(ex7data2, aes(V1, V2, color = K)) + 
+    geom_point(alpha = .4) + 
+    geom_line(data = as.data.frame(runKMeans[, 301:302]), 
+              mapping = aes(V1, V2, color = "1")) +
+    geom_line(data = as.data.frame(runKMeans[, 303:304]), 
+              mapping = aes(V1, V2, color = "2")) +
+    geom_line(data = as.data.frame(runKMeans[, 305:306]), 
+              mapping = aes(V1, V2, color = "3")) +
+    geom_point(data = as.data.frame(runKMeans[, 301:302]),
+               aes(V1, V2, color = "1"), shape = 4, size = 3) + 
+    geom_point(data = as.data.frame(runKMeans[, 303:304]),
+               aes(V1, V2, color = "2"), shape = 4, size = 3) +
+    geom_point(data = as.data.frame(runKMeans[, 305:306]),
+               aes(V1, V2, color = "3"), shape = 4, size = 3)
+g2 
+```
+
+## Random initialization
+
+```{r random-init}
+```
+
+```{r test-random-init}
+set.seed(12345)
+randomInit(ex7data2[,1:2], 3)
+```
+
+## Image compression with K-means
+
+![Here's the image to be compressed](data/ex7data/bird_small.png)
+
+### $K$-means on pixels
+
+```{r run-bird-k-means, cache=TRUE}
+bird_small <- t(read.csv("data/ex7data/bird_small.csv"))
+birdInit <- randomInit(bird_small, 16)
+
+kMeansBird <- kMeans(bird_small, birdInit, 15)
+```
+
+```{r compress-image, cache=TRUE}
+finalCentroid <- kMeansBird[nrow(kMeansBird),(ncol(kMeansBird)-16*3+1):ncol(kMeansBird)]
+finalCentroid <- round(matrix(finalCentroid, nrow = 16, ncol = 3, byrow = TRUE))
+compressedImage <- matrix(kMeansBird[nrow(kMeansBird), 1:(128*128)])
+```
+
+If we take `compressedImage` and  `finalCentroid` together, this provides all the information needed. To reconstruct the image, we map it back into standard RGB values. Note that these are uncompressed.
+
+```{r recon-img, cache=TRUE}
+r <- sapply(compressedImage, function(x){finalCentroid[x, 1]})
+g <- sapply(compressedImage, function(x){finalCentroid[x, 2]})
+b <- sapply(compressedImage, function(x){finalCentroid[x, 3]})
+
+col <- rgb(r, g, b, maxColorValue = 255)
+dim(col) <- c(128, 128)
+```
+
+```{r print-compressed-image, cache=TRUE}
+grid.raster(col, interpolate=FALSE)
+```
+
+### Optional (ungraded) exercise: Use your own image
+
+```{r}
+
+```
+
+# Principal Component Analysis
+
+## Example Dataset
+
+```{r plot-pca-example, fig.width=6, fig.height=6}
+ex7data1 <- read.csv("data/ex7data/ex7data1.csv")
+g3 <- ggplot(ex7data1, aes(V1, V2)) + geom_point()
+g3
+```
+
+## Implementing PCA
+
+A note about SVD in R: unlike in Matlab, where the function returns the three matrices `U`, `S`, and `V`, `svd` returns a vector `D` containing the singular values of the input matrix, of length `min(n, p)` rather than a matrix `S`. It took me longer than I'd like to admit to figure this out.
+
+```{r ex7data1-svd}
+ex71normd <- scale(ex7data1)
+ex71svd <- svd(cov(ex71normd))
+# We should expect the first principal component to be -0.707, -0.707
+ex71svd$v[, 1]
+```
+
+### Plotting the eigenvectors of the scatterplot
+
+The eigenvectors are centered at the mean of the data, and extend to the product of the singular values and left singular vectors. I again got some help from [kaleko](https://github.com/kaleko/CourseraML/blob/master/ex7/ex7.ipynb) and he multiplied the endpoint of the vectors by 1.5, which I've done here as well. I'm not sure why that's the case, but it appears to match the figure in the assignment sheet. Regardless, for dimensionality reduction, only the direction of the vector matters.
+
+We plot these figures with the same scale on both axes so the eigenvectors appear perpendicular. 
+
+```{r eigenvectors, fig.width=6, fig.height=6}
+ex71means <- apply(ex7data1, 2, mean)
+
+g4 <- g3 + geom_segment(x = ex71means[1], 
+                 xend = ex71means[1] + 1.5 * ex71svd$d[1] * ex71svd$u[1,1], 
+                 y = ex71means[2], 
+                 yend = ex71means[2] + 1.5 * ex71svd$d[1] * ex71svd$u[1,2]) +
+    geom_segment(x = ex71means[1], 
+                 xend = ex71means[1] + 1.5 * ex71svd$d[2] * ex71svd$u[2,1], 
+                 y = ex71means[2], 
+                 yend = ex71means[2] + 1.5 * ex71svd$d[2] * ex71svd$u[2,2])
+g4
+
+```
+
+## Dimensionality Reduction with PCA
+
+### Projecting the data onto the principal components
+
+```{r project-data}
+```
+
+We should see a value of about 1.481.
+
+```{r project-data-test}
+Z <- projectData(ex71normd, ex71svd$u, 1)
+Z[1]
+```
+
+### Reconstructing an approximation of the data
+
+```{r recover-data}
+```
+
+We should see a value of about [-1.047 -1.047].
+
+```{r recover-data-test, cache=TRUE}
+X_rec <- recoverData(Z, ex71svd$u, 1)
+X_rec[1,]
+```
+
+### Visualizing the projections
+
+```{r viz-projections, fig.width=6, fig.height=6, cache=TRUE}
+m <- as.data.frame(ex71normd)
+m$pc <- "Original"
+
+n <- as.data.frame(X_rec)
+n$pc <- "Projected"
+
+ex71projected <- rbind(m, n)
+rm(m)
+rm(n)
+
+ex71projected$pc <- as.factor(ex71projected$pc)
+ex71projected$match <- 1:50
+
+g5 <- ggplot(ex71projected, aes(V1, V2, group = match)) +
+    geom_point(aes(color = pc)) +
+    geom_line(linetype = "dotdash") +
+    theme(legend.position="none")
+g5
+```
+
+
+## Face Image Dataset
+
+```{r read-faces, cache = T}
+ex7faces <- as.matrix(read.csv("data/ex7data/ex7faces.csv"))
+```
+
+```{r plot-faces, fig.width=6, fig.width=6, cache=TRUE}
+```
+
+I'm having a hell of a time getting these to display correctly so I'll come back to it later. I think the easiest way to do it will be to write the image to a file then display it here.
+
+```{r view-faces, cache=TRUE}
+ex7faces <- (ex7faces + 128) / 256
+plotFaces(ex7faces)
+```
+
+### PCA on Faces
+
+```{r ex7-faces-pca, cache=TRUE}
+facesScaled <- scale(ex7faces)
+facesSvd <- svd(cov(facesScaled))
+facesProjectd <- projectData(X = facesScaled, U = facesSvd$u, K = 100)
+```
+
+### Dimensionality Reduction
+
+```{r plot-recovered-faces, cache=TRUE}
+facesRecovered <- recoverData(facesProjectd, facesSvd$u, 100)
+plotFaces(facesRecovered)
+```
+
+## Optional (ungraded) exercise: PCA for visualization

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jai Broome" />
+
+
+<title>Exercise 4</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="site_libs/highlight/default.css"
+      type="text/css" />
+<script src="site_libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">coursera-ml-R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="ex1">Exercise 1</a>
+</li>
+<li>
+  <a href="ex2">Exercise 2</a>
+</li>
+<li>
+  <a href="ex3">Exercise 3</a>
+</li>
+<li>
+  <a href="ex4">Exercise 4</a>
+</li>
+<li>
+  <a href="ex7">Exercise 7</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Exercise 4</h1>
+<h4 class="author"><em>Jai Broome</em></h4>
+<h4 class="date"><em>21 November, 2016</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#neural-networks"><span class="toc-section-number">1</span> Neural Networks</a><ul>
+<li><a href="#visualizing-the-data"><span class="toc-section-number">1.1</span> Visualizing the data</a></li>
+<li><a href="#model-representation"><span class="toc-section-number">1.2</span> Model representation</a></li>
+<li><a href="#feedforward-and-cost-function"><span class="toc-section-number">1.3</span> Feedforward and cost function</a></li>
+<li><a href="#regularized-cost-function"><span class="toc-section-number">1.4</span> Regularized cost function</a></li>
+</ul></li>
+<li><a href="#backpropagation"><span class="toc-section-number">2</span> Backpropagation</a><ul>
+<li><a href="#sigmoid-gradient"><span class="toc-section-number">2.1</span> Sigmoid gradient</a></li>
+<li><a href="#random-initialization"><span class="toc-section-number">2.2</span> Random initialization</a></li>
+<li><a href="#backpropagation-1"><span class="toc-section-number">2.3</span> Backpropagation</a></li>
+<li><a href="#gradient-checking"><span class="toc-section-number">2.4</span> Gradient checking</a></li>
+<li><a href="#regularized-neural-networks"><span class="toc-section-number">2.5</span> Regularized Neural Networks</a></li>
+<li><a href="#learning-parameters-using-optim"><span class="toc-section-number">2.6</span> Learning parameters using <code>optim</code></a></li>
+</ul></li>
+<li><a href="#visualizing-the-hidden-layer"><span class="toc-section-number">3</span> Visualizing the hidden layer</a><ul>
+<li><a href="#optional-ungraded-exercise"><span class="toc-section-number">3.1</span> Optional (ungraded) exercise</a></li>
+</ul></li>
+</ul>
+</div>
+
+<pre class="r"><code>require(knitr)
+require(dplyr)
+read_chunk(&quot;ex2/ex2_chunks.R&quot;)
+read_chunk(&quot;ex4/ex4_chunks.R&quot;)</code></pre>
+<div id="neural-networks" class="section level1">
+<h1><span class="header-section-number">1</span> Neural Networks</h1>
+<pre class="r"><code>set.seed(12345)
+ex3data1 &lt;- as.matrix(read.csv(&quot;data/ex3data1.csv&quot;))
+colnames(ex3data1) &lt;- paste(&quot;X&quot;, seq(ncol(ex3data1)), sep = &quot;&quot;)
+colnames(ex3data1)[ncol(ex3data1)] &lt;- &quot;Y&quot;
+ex3data1 &lt;- cbind(X0 = 1, ex3data1)</code></pre>
+<pre class="r"><code>sig &lt;- function(x){1 / (1 + exp(-x))}</code></pre>
+<pre class="r"><code>newy &lt;- vector()
+for(i in 1:10){
+  newy &lt;- cbind(newy, ex3data1[, &quot;Y&quot;] == i)
+}</code></pre>
+<div id="visualizing-the-data" class="section level2">
+<h2><span class="header-section-number">1.1</span> Visualizing the data</h2>
+<p>This is the same visualization as in Exercise 3</p>
+</div>
+<div id="model-representation" class="section level2">
+<h2><span class="header-section-number">1.2</span> Model representation</h2>
+<p>This is largely based on <a href="https://github.com/kaleko/CourseraML/blob/master/ex4/ex4.ipynb">kaleko’s python script on Github</a>.</p>
+<p>I read in the weights and save them as a list because this mimics what’s returned with <code>readMat</code>. Since I already processed them and saved them as separate CSVs, this is an odd way to do it, but it would require going back and modifying some of the structure for the following computations. I may tidy this up in the future</p>
+<pre class="r"><code>ex3weights &lt;- list(Theta1 = as.matrix(read.csv(&quot;data/ex3weights_Theta1.csv&quot;)),
+                   Theta2 = as.matrix(read.csv(&quot;data/ex3weights_Theta2.csv&quot;)))</code></pre>
+<pre class="r"><code>input_layer_size &lt;- 400
+hidden_layer_size &lt;- 25
+output_layer_size &lt;- 10
+n_training_samples &lt;- 5000</code></pre>
+</div>
+<div id="feedforward-and-cost-function" class="section level2">
+<h2><span class="header-section-number">1.3</span> Feedforward and cost function</h2>
+<p><code>unlist()</code> does what <code>flattenParams</code> does in kaleko’s Python script</p>
+<pre class="r"><code>reshapeParams &lt;- function(flattened_array){
+    theta1 &lt;- matrix(flattened_array[1:((input_layer_size+1)*hidden_layer_size)],
+                     nrow = hidden_layer_size,
+                     ncol = input_layer_size + 1,
+                     byrow = FALSE)
+
+    theta2 &lt;- matrix(flattened_array[((input_layer_size+1)*hidden_layer_size + 1):
+                                         length(flattened_array)],
+                     nrow = output_layer_size,
+                     ncol = hidden_layer_size + 1,
+                     byrow = FALSE)
+
+    return(list(theta1 = theta1, theta2 = theta2))
+}</code></pre>
+<pre class="r"><code>reshapeX &lt;- function(flattenedX){
+    xReshaped &lt;- matrix(flattenedX,
+                        nrow = n_training_samples,
+                        ncol = (input_layer_size+1),
+                        byrow = FALSE)
+    return(xReshaped)
+}</code></pre>
+<pre class="r"><code>computeCost &lt;- function(mythetas_flattened, myX_flattened, myy, mylambda = 0){
+    # Modified to take (m X k) dimensional y matrix
+
+    # First unroll the parameters
+    mythetas &lt;- reshapeParams(mythetas_flattened)
+
+    # Now unroll X
+    myX &lt;- reshapeX(myX_flattened)
+
+    #This is what will accumulate the total cost
+    total_cost &lt;- 0
+
+    m &lt;- n_training_samples
+
+    # irow &lt;- 100
+    for(irow in 1:m){
+        myrow &lt;- myX[irow, ]
+        myhs &lt;- propagateForward(myrow,mythetas)[[2]][,2]
+        tmpy &lt;- myy[irow, ]
+        mycost &lt;- - crossprod(c(tmpy, 1 - tmpy), c(log(myhs), log(1 - myhs)))
+        total_cost &lt;- total_cost + mycost
+    }
+    total_cost &lt;- total_cost / m
+
+    total_reg &lt;- 0
+    for(mytheta in mythetas){
+        total_reg &lt;- total_reg + sum(mytheta * mytheta)
+    }
+    total_reg &lt;- total_reg * mylambda / (2 * m)
+    return(total_cost + total_reg)
+}</code></pre>
+<pre class="r"><code>propagateForward &lt;- function(row, Thetas){
+    features &lt;- row
+    zs_as_per_layer &lt;- list()
+
+    for(i in 1:length(Thetas)){
+        # i &lt;- 1
+        Theta &lt;- Thetas[[i]]
+
+        #Theta1 is (25,401), features are (401, 1)
+        #so &quot;z&quot; comes out to be (25, 1)
+        #this is one &quot;z&quot; value for each unit in the hidden layer
+        #not counting the bias unit
+        z &lt;- Theta %*% features
+        a &lt;- sig(z)
+        zs_as_per_layer[[i]] &lt;- cbind(z, a)
+        if(i == length(Thetas)) {
+            return(zs_as_per_layer)
+        }
+        a &lt;- c(1, a)
+        features &lt;- a
+        # i &lt;- 2
+    }
+}</code></pre>
+<p>We should expect an initial cost of 0.287629.</p>
+<pre class="r"><code>computeCost(unlist(ex3weights), unlist(ex3data1[, 1:401]), newy)</code></pre>
+<pre><code>##           [,1]
+## [1,] 0.2876292</code></pre>
+</div>
+<div id="regularized-cost-function" class="section level2">
+<h2><span class="header-section-number">1.4</span> Regularized cost function</h2>
+<p>With the regularization term, we should have an initial cost of 0.383770. As of 11/21/2016, this is slightly off.</p>
+<pre class="r"><code>computeCost(unlist(ex3weights), unlist(ex3data1[, 1:401]), newy, 1)</code></pre>
+<pre><code>##           [,1]
+## [1,] 0.3844878</code></pre>
+</div>
+</div>
+<div id="backpropagation" class="section level1">
+<h1><span class="header-section-number">2</span> Backpropagation</h1>
+<div id="sigmoid-gradient" class="section level2">
+<h2><span class="header-section-number">2.1</span> Sigmoid gradient</h2>
+<pre class="r"><code>sigmoidGradient &lt;- function(z){
+    sig(z) * (1 - sig(z))
+}</code></pre>
+</div>
+<div id="random-initialization" class="section level2">
+<h2><span class="header-section-number">2.2</span> Random initialization</h2>
+<pre class="r"><code>genRandThetas &lt;- function(epsilon_init = 0.12){
+    t1 &lt;- matrix(runif(hidden_layer_size * (input_layer_size+1), -1),
+                 hidden_layer_size,
+                 input_layer_size + 1)
+    t2 &lt;- matrix(runif(output_layer_size * (hidden_layer_size+1)),
+                 output_layer_size,
+                 hidden_layer_size+1)
+    return(list(Theta1 = t1 * epsilon_init, Theta2 = t2 * epsilon_init))
+}</code></pre>
+</div>
+<div id="backpropagation-1" class="section level2">
+<h2><span class="header-section-number">2.3</span> Backpropagation</h2>
+<pre class="r"><code>backPropagate &lt;- function(mythetas_flattened, myX_flattened, myy, mylambda = 0){
+    # First unroll the parameters
+    mythetas &lt;- reshapeParams(mythetas_flattened)
+
+    # Now unroll X
+    myX &lt;- reshapeX(myX_flattened)
+
+    Delta1 = matrix(0, hidden_layer_size,input_layer_size+1)
+    Delta2 = matrix(0, output_layer_size,hidden_layer_size+1)
+
+    m = n_training_samples
+    for(irow in 1:m){
+        myrow &lt;- myX[irow,]
+        a1 &lt;- myrow
+        # propagateForward returns (zs, activations) for each layer excluding the input layer
+        temp = propagateForward(myrow,mythetas)
+        z2 = temp[[1]][,1]
+        a2 = temp[[1]][,2]
+        z3 = temp[[2]][,1]
+        a3 = temp[[2]][,2]
+        tmpy &lt;- myy[irow, ]
+        delta3 = a3 - tmpy
+
+        delta2 &lt;- (t(mythetas[[2]])[-1,] %*% delta3) * sigmoidGradient(z2)
+        a2 &lt;- c(1,a2)
+        Delta1 &lt;- Delta1 + delta2 %*% t(a1)
+        Delta2 &lt;- Delta2 + delta3 %*% t(a2)
+    }
+    D1 &lt;- Delta1 / m
+    D2 &lt;- Delta2 / m
+
+    #Regularization:
+    D1[, -1] &lt;- D1[, -1] + (mylambda / m) * mythetas[[1]][,-1]
+    D2[, -1] &lt;- D2[, -1] + (mylambda / m) * mythetas[[2]][,-1]
+
+    return(unlist(list(D1, D2)))
+}</code></pre>
+<pre class="r"><code>#Actually compute D matrices for the Thetas provided
+flattenedD1D2 &lt;- backPropagate(unlist(ex3weights),
+                              unlist(ex3data1[, 1:401]),
+                              newy,#ex3data1[, ncol(ex3data1)],
+                              mylambda = 0)
+
+deltas &lt;- reshapeParams(flattenedD1D2)</code></pre>
+</div>
+<div id="gradient-checking" class="section level2">
+<h2><span class="header-section-number">2.4</span> Gradient checking</h2>
+<pre class="r"><code>checkGradient &lt;- function(mythetas,myDs,myX,myy,mylambda=0){
+    myeps &lt;- 0.0001
+    flattened &lt;- unlist(mythetas)
+    flattenedDs &lt;- unlist(myDs)
+    myX_flattened &lt;- unlist(myX)
+    n_elems &lt;- length(flattened)
+    # Pick ten random elements, compute numerical gradient, compare to respective D&#39;s
+    for(i in 1:10){
+        x &lt;- as.integer(runif(1) * n_elems)
+        epsvec &lt;- rep(0, times = n_elems)
+        epsvec[x] &lt;- myeps
+        cost_high &lt;- computeCost(flattened + epsvec,myX_flattened,myy,mylambda)
+        cost_low &lt;- computeCost(flattened - epsvec,myX_flattened,myy,mylambda)
+        mygrad &lt;- (cost_high - cost_low) / (2*myeps)
+        return(list(element = x, num.grad = mygrad, backprop.grad = flattenedDs[x]))
+    }
+}</code></pre>
+<pre class="r"><code>checkGradient(ex3weights, deltas, ex3data1[, 1:401], newy)</code></pre>
+<pre><code>## $element
+## [1] 7414
+## 
+## $num.grad
+##               [,1]
+## [1,] -0.0001192694
+## 
+## $backprop.grad
+##    theta17414 
+## -0.0001192694</code></pre>
+</div>
+<div id="regularized-neural-networks" class="section level2">
+<h2><span class="header-section-number">2.5</span> Regularized Neural Networks</h2>
+</div>
+<div id="learning-parameters-using-optim" class="section level2">
+<h2><span class="header-section-number">2.6</span> Learning parameters using <code>optim</code></h2>
+<pre class="r"><code>trainNN &lt;- function(mylambda=0, it = 50){
+    randomThetas_unrolled &lt;- unlist(genRandThetas())
+    result &lt;- optim(par = randomThetas_unrolled,
+                    fn = function(x){computeCost(x, unlist(ex3data1[, 1:401]), newy)},
+                    gr = function(x)(backPropagate(x, unlist(ex3data1[, 1:401]), newy)),
+                    method = &quot;BFGS&quot;, control = list(maxit = it))
+}</code></pre>
+<pre class="r"><code>start_time &lt;- Sys.time()
+learned_Thetas &lt;- trainNN()
+print(Sys.time() - start_time)</code></pre>
+<pre><code>## Time difference of 2.187779 mins</code></pre>
+<p>Clearly not the most efficient implementation of neural networks.</p>
+<pre class="r"><code>NNpred &lt;- function(myX,myThetas,myy){ #takes vector of ys
+    apply(myX, 1, function(x){
+        which.max(propagateForward(x, myThetas)[[2]][,2])
+    })
+}</code></pre>
+<pre class="r"><code>pred &lt;- NNpred(ex3data1[, 1:401], 
+               reshapeParams(learned_Thetas$par), 
+               ex3data1[, ncol(ex3data1)])
+sum(pred== ex3data1[, ncol(ex3data1)]) / length(pred)</code></pre>
+<pre><code>## [1] 0.925</code></pre>
+<p>Unfortunately, there’s no way to check the exact solution numerically. From the assignment:</p>
+<blockquote>
+<p>If your implementation is correct, you should see a reported training accuracy of about 95.3% (this may vary by about 1% due to the random initialization)</p>
+</blockquote>
+<p>It’s close, but I suspect the error with how regularization was implemented is causing it to not perform quite as well.</p>
+</div>
+</div>
+<div id="visualizing-the-hidden-layer" class="section level1">
+<h1><span class="header-section-number">3</span> Visualizing the hidden layer</h1>
+<p>Again, <code>displayData</code> was already written in the included Matlab files, so I’ve skipped it here.</p>
+<div id="optional-ungraded-exercise" class="section level2">
+<h2><span class="header-section-number">3.1</span> Optional (ungraded) exercise</h2>
+<p>I may revisit the optional exercizes once I’m finished with the “main” content.</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

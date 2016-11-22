@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jai Broome" />
+
+
+<title>Exercise 7</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="site_libs/highlight/default.css"
+      type="text/css" />
+<script src="site_libs/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">coursera-ml-R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="ex1">Exercise 1</a>
+</li>
+<li>
+  <a href="ex2">Exercise 2</a>
+</li>
+<li>
+  <a href="ex3">Exercise 3</a>
+</li>
+<li>
+  <a href="ex4">Exercise 4</a>
+</li>
+<li>
+  <a href="ex7">Exercise 7</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Exercise 7</h1>
+<h4 class="author"><em>Jai Broome</em></h4>
+<h4 class="date"><em>21 November, 2016</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#k-means-clustering"><span class="toc-section-number">1</span> <span class="math inline">\(K\)</span>-means Clustering</a><ul>
+<li><a href="#implementing-k-means"><span class="toc-section-number">1.1</span> Implementing <span class="math inline">\(K\)</span>-means</a><ul>
+<li><a href="#finding-closest-centroids"><span class="toc-section-number">1.1.1</span> Finding closest centroids</a></li>
+<li><a href="#computing-centroid-means"><span class="toc-section-number">1.1.2</span> Computing centroid means</a></li>
+</ul></li>
+<li><a href="#k-means-on-example-dataset"><span class="toc-section-number">1.2</span> <span class="math inline">\(K\)</span>-means on example dataset</a></li>
+<li><a href="#random-initialization"><span class="toc-section-number">1.3</span> Random initialization</a></li>
+<li><a href="#image-compression-with-k-means"><span class="toc-section-number">1.4</span> Image compression with K-means</a><ul>
+<li><a href="#k-means-on-pixels"><span class="toc-section-number">1.4.1</span> <span class="math inline">\(K\)</span>-means on pixels</a></li>
+<li><a href="#optional-ungraded-exercise-use-your-own-image"><span class="toc-section-number">1.4.2</span> Optional (ungraded) exercise: Use your own image</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#principal-component-analysis"><span class="toc-section-number">2</span> Principal Component Analysis</a><ul>
+<li><a href="#example-dataset"><span class="toc-section-number">2.1</span> Example Dataset</a></li>
+<li><a href="#implementing-pca"><span class="toc-section-number">2.2</span> Implementing PCA</a><ul>
+<li><a href="#plotting-the-eigenvectors-of-the-scatterplot"><span class="toc-section-number">2.2.1</span> Plotting the eigenvectors of the scatterplot</a></li>
+</ul></li>
+<li><a href="#dimensionality-reduction-with-pca"><span class="toc-section-number">2.3</span> Dimensionality Reduction with PCA</a><ul>
+<li><a href="#projecting-the-data-onto-the-principal-components"><span class="toc-section-number">2.3.1</span> Projecting the data onto the principal components</a></li>
+<li><a href="#reconstructing-an-approximation-of-the-data"><span class="toc-section-number">2.3.2</span> Reconstructing an approximation of the data</a></li>
+<li><a href="#visualizing-the-projections"><span class="toc-section-number">2.3.3</span> Visualizing the projections</a></li>
+</ul></li>
+<li><a href="#face-image-dataset"><span class="toc-section-number">2.4</span> Face Image Dataset</a><ul>
+<li><a href="#pca-on-faces"><span class="toc-section-number">2.4.1</span> PCA on Faces</a></li>
+<li><a href="#dimensionality-reduction"><span class="toc-section-number">2.4.2</span> Dimensionality Reduction</a></li>
+</ul></li>
+<li><a href="#optional-ungraded-exercise-pca-for-visualization"><span class="toc-section-number">2.5</span> Optional (ungraded) exercise: PCA for visualization</a></li>
+</ul></li>
+</ul>
+</div>
+
+<pre class="r"><code>require(ggplot2)
+require(knitr)
+library(grid)
+read_chunk(&quot;ex7/ex7_chunks.R&quot;)</code></pre>
+<div id="k-means-clustering" class="section level1">
+<h1><span class="header-section-number">1</span> <span class="math inline">\(K\)</span>-means Clustering</h1>
+<div id="implementing-k-means" class="section level2">
+<h2><span class="header-section-number">1.1</span> Implementing <span class="math inline">\(K\)</span>-means</h2>
+<div id="finding-closest-centroids" class="section level3">
+<h3><span class="header-section-number">1.1.1</span> Finding closest centroids</h3>
+<pre class="r"><code>ex7data2 &lt;- read.csv(&quot;data/ex7data/ex7data2.csv&quot;)</code></pre>
+<pre class="r"><code>g1 &lt;- ggplot(ex7data2, aes(V1, V2)) + geom_point()
+g1</code></pre>
+<p><img src="ex7_files/figure-html/explore-data-1.png" width="672" /></p>
+<p>This part is fairly straightforward, but it’s broken into parts to make it easier to debug. <code>minEuDist</code> takes a coordinate and a vector of centroid coordinates and returns the index of the nearest one.</p>
+<pre class="r"><code>minEuDist &lt;- function(xi, centroids){
+    euDist &lt;- apply(centroids, 1, function(j){dist(rbind(j, xi))})
+    return(which.min(euDist))
+}</code></pre>
+<pre class="r"><code>initial_centroids &lt;- matrix(c(3, 3, 6, 2, 8, 5), 3, 2, TRUE)
+minEuDist(ex7data2[15,], initial_centroids)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>findClosestCentroids &lt;- function(X, centroids){
+    apply(X, 1, function(i){minEuDist(i, centroids)})
+}</code></pre>
+<p><code>findClosestCentroids</code> applies <code>minEuDist</code> over an array.</p>
+<p>We should see the output [1 3 2] corresponding to the centroid assignments for the first 3 examples.</p>
+<pre class="r"><code>idx &lt;- findClosestCentroids(ex7data2, initial_centroids)
+idx[1:3]</code></pre>
+<pre><code>## [1] 1 3 2</code></pre>
+</div>
+<div id="computing-centroid-means" class="section level3">
+<h3><span class="header-section-number">1.1.2</span> Computing centroid means</h3>
+<p>The other part of K-means clustering is updating the value of the centroids. This function takes the array of points, their initial assignment to a centroid, and the positions of the centroids. The data are then subsetted by centroid, and that centroid is moved to the new average value of those points that are assigned to it.</p>
+<pre class="r"><code>computeCentroids &lt;- function(X, idx, K){
+    newCentroids &lt;- K
+    for(k in 1:nrow(K)){
+        Xk &lt;- X[k == idx,]
+        newCentroids[k, ] &lt;- apply(Xk, 2, mean)
+    }
+    return(newCentroids)
+}</code></pre>
+<pre class="r"><code>computeCentroids(ex7data2, idx, initial_centroids)</code></pre>
+<pre><code>##          [,1]     [,2]
+## [1,] 2.428301 3.157924
+## [2,] 5.813503 2.633656
+## [3,] 7.119387 3.616684</code></pre>
+</div>
+</div>
+<div id="k-means-on-example-dataset" class="section level2">
+<h2><span class="header-section-number">1.2</span> <span class="math inline">\(K\)</span>-means on example dataset</h2>
+<p><code>runKMeans</code> saves the values of the centroids that way we can plot their trajectory.</p>
+<pre class="r"><code>kMeans &lt;- function(X, K, iter){
+    convergence &lt;- matrix(nrow = iter + 1, ncol = nrow(X) + nrow(K) * ncol(K))
+    for(i in 1:iter){
+        idx &lt;- findClosestCentroids(X, K)
+        convergence[i, ] &lt;- c(idx, as.vector(t(K)))
+        K &lt;- computeCentroids(X, idx, K)
+    }
+    idx &lt;- findClosestCentroids(X, K)
+    convergence[iter + 1, ] &lt;- c(idx, as.vector(t(K)))
+    return(convergence)
+}</code></pre>
+<pre class="r"><code>runKMeans &lt;- kMeans(ex7data2, initial_centroids, 10)
+
+ex7data2 &lt;- cbind(ex7data2, K = as.factor(runKMeans[nrow(runKMeans), 1:300]))</code></pre>
+<pre class="r"><code>g2 &lt;- ggplot(ex7data2, aes(V1, V2, color = K)) + 
+    geom_point(alpha = .4) + 
+    geom_line(data = as.data.frame(runKMeans[, 301:302]), 
+              mapping = aes(V1, V2, color = &quot;1&quot;)) +
+    geom_line(data = as.data.frame(runKMeans[, 303:304]), 
+              mapping = aes(V1, V2, color = &quot;2&quot;)) +
+    geom_line(data = as.data.frame(runKMeans[, 305:306]), 
+              mapping = aes(V1, V2, color = &quot;3&quot;)) +
+    geom_point(data = as.data.frame(runKMeans[, 301:302]),
+               aes(V1, V2, color = &quot;1&quot;), shape = 4, size = 3) + 
+    geom_point(data = as.data.frame(runKMeans[, 303:304]),
+               aes(V1, V2, color = &quot;2&quot;), shape = 4, size = 3) +
+    geom_point(data = as.data.frame(runKMeans[, 305:306]),
+               aes(V1, V2, color = &quot;3&quot;), shape = 4, size = 3)
+g2 </code></pre>
+<p><img src="ex7_files/figure-html/plot-test-k-means-1.png" width="672" /></p>
+</div>
+<div id="random-initialization" class="section level2">
+<h2><span class="header-section-number">1.3</span> Random initialization</h2>
+<pre class="r"><code>randomInit &lt;- function(X, n){X[sample(nrow(X), n), ]}</code></pre>
+<pre class="r"><code>set.seed(12345)
+randomInit(ex7data2[,1:2], 3)</code></pre>
+<pre><code>##           V1       V2
+## 217 5.667310 2.964779
+## 262 4.606305 3.329458
+## 227 5.372939 2.816848</code></pre>
+</div>
+<div id="image-compression-with-k-means" class="section level2">
+<h2><span class="header-section-number">1.4</span> Image compression with K-means</h2>
+<div class="figure">
+<img src="data/ex7data/bird_small.png" alt="Here’s the image to be compressed" />
+<p class="caption">Here’s the image to be compressed</p>
+</div>
+<div id="k-means-on-pixels" class="section level3">
+<h3><span class="header-section-number">1.4.1</span> <span class="math inline">\(K\)</span>-means on pixels</h3>
+<pre class="r"><code>bird_small &lt;- t(read.csv(&quot;data/ex7data/bird_small.csv&quot;))
+birdInit &lt;- randomInit(bird_small, 16)
+
+kMeansBird &lt;- kMeans(bird_small, birdInit, 15)</code></pre>
+<pre class="r"><code>finalCentroid &lt;- kMeansBird[nrow(kMeansBird),(ncol(kMeansBird)-16*3+1):ncol(kMeansBird)]
+finalCentroid &lt;- round(matrix(finalCentroid, nrow = 16, ncol = 3, byrow = TRUE))
+compressedImage &lt;- matrix(kMeansBird[nrow(kMeansBird), 1:(128*128)])</code></pre>
+<p>If we take <code>compressedImage</code> and <code>finalCentroid</code> together, this provides all the information needed. To reconstruct the image, we map it back into standard RGB values. Note that these are uncompressed.</p>
+<pre class="r"><code>r &lt;- sapply(compressedImage, function(x){finalCentroid[x, 1]})
+g &lt;- sapply(compressedImage, function(x){finalCentroid[x, 2]})
+b &lt;- sapply(compressedImage, function(x){finalCentroid[x, 3]})
+
+col &lt;- rgb(r, g, b, maxColorValue = 255)
+dim(col) &lt;- c(128, 128)</code></pre>
+<pre class="r"><code>grid.raster(col, interpolate=FALSE)</code></pre>
+<p><img src="ex7_files/figure-html/print-compressed-image-1.png" width="672" /></p>
+</div>
+<div id="optional-ungraded-exercise-use-your-own-image" class="section level3">
+<h3><span class="header-section-number">1.4.2</span> Optional (ungraded) exercise: Use your own image</h3>
+</div>
+</div>
+</div>
+<div id="principal-component-analysis" class="section level1">
+<h1><span class="header-section-number">2</span> Principal Component Analysis</h1>
+<div id="example-dataset" class="section level2">
+<h2><span class="header-section-number">2.1</span> Example Dataset</h2>
+<pre class="r"><code>ex7data1 &lt;- read.csv(&quot;data/ex7data/ex7data1.csv&quot;)
+g3 &lt;- ggplot(ex7data1, aes(V1, V2)) + geom_point()
+g3</code></pre>
+<p><img src="ex7_files/figure-html/plot-pca-example-1.png" width="576" /></p>
+</div>
+<div id="implementing-pca" class="section level2">
+<h2><span class="header-section-number">2.2</span> Implementing PCA</h2>
+<p>A note about SVD in R: unlike in Matlab, where the function returns the three matrices <code>U</code>, <code>S</code>, and <code>V</code>, <code>svd</code> returns a vector <code>D</code> containing the singular values of the input matrix, of length <code>min(n, p)</code> rather than a matrix <code>S</code>. It took me longer than I’d like to admit to figure this out.</p>
+<pre class="r"><code>ex71normd &lt;- scale(ex7data1)
+ex71svd &lt;- svd(cov(ex71normd))
+# We should expect the first principal component to be -0.707, -0.707
+ex71svd$v[, 1]</code></pre>
+<pre><code>## [1] -0.7071068 -0.7071068</code></pre>
+<div id="plotting-the-eigenvectors-of-the-scatterplot" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Plotting the eigenvectors of the scatterplot</h3>
+<p>The eigenvectors are centered at the mean of the data, and extend to the product of the singular values and left singular vectors. I again got some help from <a href="https://github.com/kaleko/CourseraML/blob/master/ex7/ex7.ipynb">kaleko</a> and he multiplied the endpoint of the vectors by 1.5, which I’ve done here as well. I’m not sure why that’s the case, but it appears to match the figure in the assignment sheet. Regardless, for dimensionality reduction, only the direction of the vector matters.</p>
+<p>We plot these figures with the same scale on both axes so the eigenvectors appear perpendicular.</p>
+<pre class="r"><code>ex71means &lt;- apply(ex7data1, 2, mean)
+
+g4 &lt;- g3 + geom_segment(x = ex71means[1], 
+                 xend = ex71means[1] + 1.5 * ex71svd$d[1] * ex71svd$u[1,1], 
+                 y = ex71means[2], 
+                 yend = ex71means[2] + 1.5 * ex71svd$d[1] * ex71svd$u[1,2]) +
+    geom_segment(x = ex71means[1], 
+                 xend = ex71means[1] + 1.5 * ex71svd$d[2] * ex71svd$u[2,1], 
+                 y = ex71means[2], 
+                 yend = ex71means[2] + 1.5 * ex71svd$d[2] * ex71svd$u[2,2])
+g4</code></pre>
+<p><img src="ex7_files/figure-html/eigenvectors-1.png" width="576" /></p>
+</div>
+</div>
+<div id="dimensionality-reduction-with-pca" class="section level2">
+<h2><span class="header-section-number">2.3</span> Dimensionality Reduction with PCA</h2>
+<div id="projecting-the-data-onto-the-principal-components" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Projecting the data onto the principal components</h3>
+<pre class="r"><code>projectData &lt;- function(X, U, K){
+    X %*% U[, 1:K]
+}</code></pre>
+<p>We should see a value of about 1.481.</p>
+<pre class="r"><code>Z &lt;- projectData(ex71normd, ex71svd$u, 1)
+Z[1]</code></pre>
+<pre><code>## [1] 1.481274</code></pre>
+</div>
+<div id="reconstructing-an-approximation-of-the-data" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> Reconstructing an approximation of the data</h3>
+<pre class="r"><code>recoverData &lt;- function(Z, U, K){
+    Z %*% t(U[, 1:K])
+}</code></pre>
+<p>We should see a value of about [-1.047 -1.047].</p>
+<pre class="r"><code>X_rec &lt;- recoverData(Z, ex71svd$u, 1)
+X_rec[1,]</code></pre>
+<pre><code>## [1] -1.047419 -1.047419</code></pre>
+</div>
+<div id="visualizing-the-projections" class="section level3">
+<h3><span class="header-section-number">2.3.3</span> Visualizing the projections</h3>
+<pre class="r"><code>m &lt;- as.data.frame(ex71normd)
+m$pc &lt;- &quot;Original&quot;
+
+n &lt;- as.data.frame(X_rec)
+n$pc &lt;- &quot;Projected&quot;
+
+ex71projected &lt;- rbind(m, n)
+rm(m)
+rm(n)
+
+ex71projected$pc &lt;- as.factor(ex71projected$pc)
+ex71projected$match &lt;- 1:50
+
+g5 &lt;- ggplot(ex71projected, aes(V1, V2, group = match)) +
+    geom_point(aes(color = pc)) +
+    geom_line(linetype = &quot;dotdash&quot;) +
+    theme(legend.position=&quot;none&quot;)
+g5</code></pre>
+<p><img src="ex7_files/figure-html/viz-projections-1.png" width="576" /></p>
+</div>
+</div>
+<div id="face-image-dataset" class="section level2">
+<h2><span class="header-section-number">2.4</span> Face Image Dataset</h2>
+<pre class="r"><code>ex7faces &lt;- as.matrix(read.csv(&quot;data/ex7data/ex7faces.csv&quot;))</code></pre>
+<pre class="r"><code>plotFaces &lt;- function(X){
+    # This assumes there will be at least 100 square, grayscale pictures
+    k &lt;- sqrt(ncol(X))
+    X &lt;- X[1:100,]
+    Xreshaped &lt;- matrix(nrow = k * 10, ncol = 0)
+    for(i in 1:10){
+        Xtall &lt;- matrix(nrow = 0, ncol = k)
+        for(j in (10 * i - 9):(10 * i)){
+            ## The indexing is a little weird because we want 1:10, then 11:20,
+            ## etc.
+            face &lt;- matrix(X[j,], k, k, TRUE)[, k:1]
+            Xtall &lt;- rbind(Xtall, face)
+        }
+        Xreshaped &lt;- cbind(Xreshaped, Xtall)
+    }
+    image(Xreshaped, axes = F, col = grey(seq(0, 1, length = 256)))
+}</code></pre>
+<p>I’m having a hell of a time getting these to display correctly so I’ll come back to it later. I think the easiest way to do it will be to write the image to a file then display it here.</p>
+<pre class="r"><code>ex7faces &lt;- (ex7faces + 128) / 256
+plotFaces(ex7faces)</code></pre>
+<p><img src="ex7_files/figure-html/view-faces-1.png" width="672" /></p>
+<div id="pca-on-faces" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> PCA on Faces</h3>
+<pre class="r"><code>facesScaled &lt;- scale(ex7faces)
+facesSvd &lt;- svd(cov(facesScaled))
+facesProjectd &lt;- projectData(X = facesScaled, U = facesSvd$u, K = 100)</code></pre>
+</div>
+<div id="dimensionality-reduction" class="section level3">
+<h3><span class="header-section-number">2.4.2</span> Dimensionality Reduction</h3>
+<pre class="r"><code>facesRecovered &lt;- recoverData(facesProjectd, facesSvd$u, 100)
+plotFaces(facesRecovered)</code></pre>
+<p><img src="ex7_files/figure-html/plot-recovered-faces-1.png" width="672" /></p>
+</div>
+</div>
+<div id="optional-ungraded-exercise-pca-for-visualization" class="section level2">
+<h2><span class="header-section-number">2.5</span> Optional (ungraded) exercise: PCA for visualization</h2>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

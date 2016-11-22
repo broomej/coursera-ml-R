@@ -1,0 +1,16 @@
+name: "coursera-ml-R"
+navbar:
+  title: "coursera-ml-R"
+  left:
+    - text: "Exercise 1"
+      href: ex1
+    - text: "Exercise 2"
+      href: ex2
+    - text: "Exercise 3"
+      href: ex3
+    - text: "Exercise 4"
+      href: ex4
+    - text: "Exercise 7"
+      href: ex7
+output_dir: "docs"
+exclude: ["data", "*.pdf", "*.R"]
